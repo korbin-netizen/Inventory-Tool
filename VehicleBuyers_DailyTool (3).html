@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vehicle Buyers — Daily Inventory Tool</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f0f2f7; min-height: 100vh; }
+  .header { background: #1A1A2E; color: white; padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .header-title { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+  .header-sub { font-size: 12px; color: #E8B84B; margin-top: 3px; }
+  .date-badge { background: #E8B84B; color: #1A1A2E; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 13px; }
+  .container { max-width: 980px; margin: 32px auto; padding: 0 20px; }
+  .card { background: white; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 20px; overflow: hidden; }
+  .card-header { background: #2D3561; color: white; padding: 14px 24px; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+  .step { background: #E8B84B; color: #1A1A2E; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; flex-shrink: 0; }
+  .card-body { padding: 24px; }
+  .drop-zone { border: 2.5px dashed #2D3561; border-radius: 10px; padding: 40px 24px; text-align: center; cursor: pointer; transition: all 0.2s; background: #f7f9ff; }
+  .drop-zone:hover, .drop-zone.drag-over { background: #eef1ff; border-color: #E8B84B; }
+  .drop-zone .icon { font-size: 40px; margin-bottom: 10px; }
+  .drop-zone h3 { font-size: 16px; color: #1A1A2E; margin-bottom: 6px; }
+  .drop-zone p { font-size: 13px; color: #777; }
+  #fileInput { display: none; }
+  .sbar { border-radius: 8px; padding: 12px 16px; margin-top: 16px; font-size: 13px; display: none; }
+  .sbar.success { background: #f0faf4; border: 1px solid #a8ddb9; color: #1a6b2a; }
+  .sbar.error { background: #fdf0f0; border: 1px solid #f0a0a0; color: #a32d2d; }
+  .sbar.info { background: #f0f4ff; border: 1px solid #a0b0f0; color: #2D3561; }
+  .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-top: 16px; }
+  .stat { background: #f7f9ff; border-radius: 8px; padding: 14px; text-align: center; border: 1px solid #e0e4f0; }
+  .stat .num { font-size: 26px; font-weight: 800; color: #1A1A2E; }
+  .stat .lbl { font-size: 11px; color: #777; margin-top: 3px; text-transform: uppercase; }
+  .stat.az .num { color: #1a6b8a; }
+  .stat.tx .num { color: #8a6b1a; }
+  .ef { margin-bottom: 12px; }
+  .ef label { font-size: 12px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+  .ef input, .ef textarea { width: 100%; border: 1px solid #dde0ea; border-radius: 6px; padding: 8px 12px; font-size: 13px; font-family: Arial, sans-serif; color: #333; background: white; resize: vertical; }
+  .ef textarea { min-height: 160px; }
+  .bcc-box { background: #f0faf4; border: 1px solid #a8ddb9; border-radius: 6px; padding: 10px 12px; font-size: 11px; color: #1a6b2a; word-break: break-all; max-height: 80px; overflow-y: auto; }
+  .btn { padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-dark { background: #1A1A2E; color: white; } .btn-dark:hover { background: #2D3561; }
+  .btn-gold { background: #E8B84B; color: #1A1A2E; } .btn-gold:hover { background: #d4a43a; }
+  .btn-grn { background: #1a6b2a; color: white; } .btn-grn:hover { background: #155523; }
+  .btn-sheets { background: #0F9D58; color: white; } .btn-sheets:hover:not(:disabled) { background: #0b7a44; } .btn-sheets:disabled { background: #aaa; color: #eee; cursor: not-allowed; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  .progress { height: 6px; background: #e0e4f0; border-radius: 3px; margin-top: 12px; overflow: hidden; display: none; }
+  .progress-bar { height: 100%; background: #E8B84B; border-radius: 3px; transition: width 0.4s; }
+  .banner { border-radius: 10px; padding: 16px 20px; display: none; align-items: center; gap: 14px; margin-top: 16px; }
+  .banner p { font-size: 13px; opacity: 0.9; margin-top: 3px; }
+  .banner-grn { background: #1a6b2a; color: white; }
+  .banner-sheets { background: #0F9D58; color: white; }
+  .signin-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+  .signin-lbl { font-size: 13px; color: #555; }
+  .signin-lbl.ok { color: #0F9D58; font-weight: 700; }
+  hr.div { border: none; border-top: 1px solid #eee; margin: 16px 0; }
+  .table-wrap { max-height: 280px; overflow-y: auto; border-radius: 8px; border: 1px solid #e0e4f0; margin-top: 12px; }
+  table.pt { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.pt th { background: #2D3561; color: white; padding: 7px 10px; text-align: left; }
+  table.pt td { padding: 6px 10px; border-bottom: 1px solid #eee; }
+  table.pt tr:nth-child(even) td { background: #f7f9ff; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+  .tag-az { background: #E8F4FD; color: #1a6b8a; }
+  .tag-tx { background: #FFF8E8; color: #8a6b1a; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <div class="header-title">VEHICLE BUYERS AUTO AUCTION</div>
+    <div class="header-sub">Daily Wholesale Inventory Tool</div>
+  </div>
+  <div class="date-badge" id="dateBadge"></div>
+</div>
+
+<div class="container">
+
+  <!-- STEP 1: Upload -->
+  <div class="card">
+    <div class="card-header"><span class="step">1</span> Drop Your Daily CSV</div>
+    <div class="card-body">
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+        <div class="icon">📂</div>
+        <h3>Drag & drop your inventory CSV here</h3>
+        <p>Your 1:30pm export from the webapp</p>
+      </div>
+      <input type="file" id="fileInput" accept=".csv">
+      <div class="progress" id="prog"><div class="progress-bar" id="progBar" style="width:0%"></div></div>
+      <div class="sbar" id="uploadStatus"></div>
+      <div class="stats-row" id="statsRow" style="display:none">
+        <div class="stat"><div class="num" id="sTotal">—</div><div class="lbl">Total Units</div></div>
+        <div class="stat az"><div class="num" id="sAZ">—</div><div class="lbl">Phoenix AZ</div></div>
+        <div class="stat tx"><div class="num" id="sTX">—</div><div class="lbl">Dallas TX</div></div>
+        <div class="stat"><div class="num" id="sAvg">—</div><div class="lbl">Avg Price</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: Preview -->
+  <div class="card" id="previewCard" style="display:none">
+    <div class="card-header"><span class="step">2</span> Preview & Download Files</div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table class="pt">
+          <thead><tr><th>VIN</th><th>Stock #</th><th>Year</th><th>Make</th><th>Model</th><th>Trim</th><th>Miles</th><th>Color</th><th>Price</th><th>Loc</th></tr></thead>
+          <tbody id="previewBody"></tbody>
+        </table>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-dark" onclick="downloadExcel()">⬇ Download Excel</button>
+        <button class="btn btn-gold" onclick="downloadPDF()">⬇ Download PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: Google Sheets -->
+  <div class="card" id="sheetsCard" style="display:none">
+    <div class="card-header"><span class="step">3</span> Update Google Sheet</div>
+    <div class="card-body">
+      <p style="font-size:13px;color:#555;margin-bottom:16px">Sign in once with Google and then push your clean inventory directly to your shared Google Sheet. Your dealers will see the updated list immediately at the link you already send them.</p>
+      <div class="signin-row">
+        <button class="btn btn-dark" onclick="triggerAuth()" id="signInBtn">🔐 Sign in with Google</button>
+        <span class="signin-lbl" id="signinLbl">Not signed in</span>
+      </div>
+      <hr class="div">
+      <div class="btn-row">
+        <button class="btn btn-sheets" id="syncBtn" onclick="syncToSheets()" disabled>🔄 Sync Inventory to Google Sheet</button>
+      </div>
+      <div class="sbar" id="sheetsStatus"></div>
+      <div class="banner banner-sheets" id="sheetsBanner">
+        <span style="font-size:24px">✅</span>
+        <div><strong>Google Sheet updated!</strong><p>Your dealers can now see the fresh inventory at your shared link.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: Email -->
+  <div class="card" id="emailCard" style="display:none">
+    <div class="card-header"><span class="step">4</span> Send Email Blast</div>
+    <div class="card-body">
+      <div class="ef">
+        <label>Subject</label>
+        <input type="text" id="emailSubject" readonly>
+      </div>
+      <div class="ef">
+        <label>BCC — <span id="bccCount"></span> dealers</label>
+        <div class="bcc-box" id="bccDisplay"></div>
+      </div>
+      <div class="ef">
+        <label>Email Body</label>
+        <textarea id="emailBody"></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-grn" onclick="openGmail()">✉ Open in Gmail</button>
+        <button class="btn btn-dark" onclick="copyBody()">📋 Copy Email Body</button>
+        <button class="btn btn-gold" onclick="copyBCC()">📋 Copy BCC List</button>
+      </div>
+      <div class="banner banner-grn" id="gmailBanner">
+        <span style="font-size:24px">✅</span>
+        <div><strong>Gmail is opening!</strong><p>Subject, BCC, and body are pre-filled. Just attach the PDF and hit Send.</p></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const CLIENT_ID = '528122420647-i9m143bl4ves1dtb2jg0k5q6oek3b014.apps.googleusercontent.com';
+const SHEET_ID  = '1SZrZV71WAAJ7jHpr_UlieZzCgyDV-GS_dJpFSk-rxcg';
+const SHEET_TAB = `${d.getMonth()+1}/${d.getDate()}`;
+const SCOPES    = 'https://www.googleapis.com/auth/spreadsheets';
+const SHEETS_LINK = 'https://docs.google.com/spreadsheets/d/1SZrZV71WAAJ7jHpr_UlieZzCgyDV-GS_dJpFSk-rxcg/edit?usp=sharing';
+const WEBSITE   = 'www.vehiclebuyersautoauction.com';
+
+const DEALER_EMAILS = ["vincent.martincavage@car-mart.com","dportillo@orielly.com","nfoster@driveplanet.com","guyg@lambauto.com","pete@lakepowellford.com","droller@yatesbuickgmc.com","bradf@bergegroup.com","kevindewey@santanford.com","carlos@universalmitsubishi.com","garen@subaruofglendale.net","cmonroy0126@gmail.com","ihartman@hgreg.com","rcastillo@epicchevrolet.com","BMcQueen@penskeautomotive.com","amanypenny@starfordinc.com","Jeff@hondaofpasadena.com","jlee@metrohonda.com","jharmond@airportmarinahonda.com","Harry@simivalleycdjr.com","eli@dcmitsu.com","Curtisking94571@gmail.com","mmaledon@elwaydealers.net","djordan@castlerockautoplex.com","bdanner@freewayfordonline.com","jbeard@elwaydealers.net","Daltonplattner@plattnerautomotivegroup.com","kevinejohns@gmail.com","JasonHarrison@lithia.com","Bzukas@mariontoyota.com","bnikolov@motorwerks.com","Kerry.boettcher@kunes.com","Kelly@steveschmitt.com","alex@marshallchevrolet.com","Steve.medina@rohrmanauto.com","levi.laws@rohrmanauto.com","tgriffin@victorykc.com","mclark@foxmotors.com","dchung@lssubaru.com","tyler.yates@heartlandcdjr.com","lucas@heartlandchevy.com","mdavis@justbetterauto.com","Adamg@bobmariano.com","stevenfrancoeur@merchantsauto.com","Pierre@karmawestfield.com","MMarsh@vtaig.com","ccooke@qualitydeal.com","jonathanb@freemanauto.com","Jkilway@casaautogroup.com","mmccarty@chalmersford.com","astrebe@chalmersford.com","1mesquitesales@gmail.com","awatson@gaudinford.com","devin@r21motorsports.com","rmurray@fivestaronline.net","price@fivestaronline.net","jordan.baker@fivestaronline.net","spankow@basilcars.com","Nick.landman17@gmail.com","Jewls@legendmotors.com","Joshb@chevroletoftroy.com","rvirgen@spartanburghonda.com","German.sanchez@dickpoe.com","cpolk@gpolk.com","Richard.andrews@glasscockchevrolet.com","andrew_osterhoudt@jenkinscars.com","Jason.leney@holidayautogroup.com","rfugate@brinsonautogroup.com","tony@youdriveauto.com","scummings@gayfamilyauto.com","zsanders@foundationauto.com","ryan@sames.net","rcarrera@sames.net","bwilkins@teamgranger.com","jfigueroa@metronissandallas.com","paulsharp@fredhaasnissan.com","brentwilliams@covertauto.com","ktcoles@msn.com","nickjex@heydoug.net","parker.w@heritageeprice.com","bheffron@kengarff.com","wardf@chevroletofeverett.com","rmoe@chevroletofeverett.com","Dmcmiller@iahyundai.com","mattmartin@gabrieljordan.com","tswanger@verneide.com","jfulep@serpentinichevy.com","sfields@mossy.com","OsMendoza@mossy.com","jessegenovese@covertauto.com","tylerishak@covertauto.com","justingreene@brownfieldautomotive.com","rdiaz@myalexandertoyota.com","Thompson.kevin93@gmail.com","Jckksteiner@gmail.com","jeremy.nunes@duprattford.com","Jeremydchick@gmail.com","josh@meadowsford.com","atyler@walser.com","lterry@gpolk.com","rpage@steadauto.com","jsminear@gmail.com","aron@meadowsautogroup.com","Shane.varner@kcpremierauto.com","roberto@cdjrelmhurst.com","evirgen@cdjrelmhurst.com"];
+
+let cleanData = [], accessToken = null;
+
+const d = new Date();
+const TODAY = {
+  day: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()],
+  short: `${d.getMonth()+1}/${d.getDate()}`,
+  long: d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})
+};
+document.getElementById('dateBadge').textContent = TODAY.long;
+
+// ── Google Auth ──
+function triggerAuth() {
+  if (!window.google) { alert('Google Sign-In script not loaded yet. Please wait a moment.'); return; }
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID, scope: SCOPES,
+    callback: resp => {
+      if (resp.access_token) {
+        accessToken = resp.access_token;
+        document.getElementById('signinLbl').textContent = '✅ Signed in — ready to sync';
+        document.getElementById('signinLbl').className = 'signin-lbl ok';
+        document.getElementById('signInBtn').textContent = '✅ Signed In';
+        if (cleanData.length > 0) document.getElementById('syncBtn').disabled = false;
+      }
+    }
+  });
+  client.requestAccessToken();
+}
+
+// ── File handling ──
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('drag-over'); handleFile(e.dataTransfer.files[0]); });
+document.getElementById('fileInput').addEventListener('change', e => handleFile(e.target.files[0]));
+
+function resolveLoc(row) {
+  const loc = (row['VEHICLELOCATION']||'').toString().trim().toUpperCase();
+  if (loc==='AZ'||loc==='TX') return loc;
+  return (row['STOCKNO']||'').toString().trim().toUpperCase().endsWith('D') ? 'TX' : 'AZ';
+}
+const fmtMi = v => { const n=parseInt(v); return isNaN(n)?'':n.toLocaleString(); };
+const fmtPr = v => { const n=parseFloat(v); return isNaN(n)?'':'$'+Math.round(n).toLocaleString(); };
+
+function handleFile(file) {
+  if (!file||!file.name.endsWith('.csv')) { showS('uploadStatus','Please upload a CSV file.','error'); return; }
+  showProg(true);
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result,{type:'binary'});
+      const raw = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+      cleanData = raw
+        .map(r=>({...r, VEHICLELOCATION:resolveLoc(r)}))
+        .filter(r=>{ const p=parseFloat(r['SELLINGPRICE']); return !isNaN(p)&&p>0; })
+        .sort((a,b)=>parseFloat(a['SELLINGPRICE'])-parseFloat(b['SELLINGPRICE']));
+
+      const az=cleanData.filter(r=>r.VEHICLELOCATION==='AZ').length;
+      const tx=cleanData.filter(r=>r.VEHICLELOCATION==='TX').length;
+      const avg=cleanData.reduce((s,r)=>s+parseFloat(r['SELLINGPRICE']),0)/cleanData.length;
+
+      document.getElementById('sTotal').textContent = cleanData.length;
+      document.getElementById('sAZ').textContent = az;
+      document.getElementById('sTX').textContent = tx;
+      document.getElementById('sAvg').textContent = '$'+Math.round(avg/1000)+'k';
+      document.getElementById('statsRow').style.display = 'grid';
+
+      buildPreview(); buildEmail();
+      showProg(false);
+      showS('uploadStatus',`✅ ${cleanData.length} units loaded — ${az} Phoenix (AZ), ${tx} Dallas (TX). All steps ready below.`,'success');
+      ['previewCard','sheetsCard','emailCard'].forEach(id=>document.getElementById(id).style.display='block');
+      if (accessToken) document.getElementById('syncBtn').disabled = false;
+    } catch(err) {
+      showProg(false);
+      showS('uploadStatus','Error reading file. Make sure it is the correct CSV.','error');
+    }
+  };
+  reader.readAsBinaryString(file);
+}
+
+function buildPreview() {
+  const tb = document.getElementById('previewBody');
+  tb.innerHTML = '';
+  cleanData.forEach(r => {
+    const loc = r.VEHICLELOCATION;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td style="font-size:10px;color:#777">${r.VIN||''}</td><td>${r.STOCKNO||''}</td><td>${r.YEAR||''}</td><td>${r.MAKE||''}</td><td>${r.MODEL||''}</td><td style="font-size:11px">${r.TRIM||''}</td><td>${fmtMi(r.ODOMETER)}</td><td style="font-size:11px">${r.EXTERIORCOLOR||''}</td><td style="font-weight:700;color:#1a6b2a">${fmtPr(r.SELLINGPRICE)}</td><td><span class="tag tag-${loc.toLowerCase()}">${loc}</span></td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function buildEmail() {
+  const subject = `Vehicle Buyers - ${TODAY.short} Inventory List`;
+  const body = `Happy ${TODAY.day},\n\nHere's our refreshed inventory list. Units are located in Phoenix, AZ 85027 and Lewisville, TX 75056.\n\nThe Google Sheets link is below, or I attached a PDF with the list. Use whichever is more convenient!\n\n${SHEETS_LINK}\n\nThese vehicles are also available for purchase online at ${WEBSITE}\n\nThanks,\nKorbin Plotke\n480-646-0135\nWholesale Manager\nVehicle Buyers Auto Auction`;
+  document.getElementById('emailSubject').value = subject;
+  document.getElementById('emailBody').value = body;
+  document.getElementById('bccCount').textContent = DEALER_EMAILS.length;
+  document.getElementById('bccDisplay').textContent = DEALER_EMAILS.join('; ');
+}
+
+// ── Google Sheets Sync ──
+async function syncToSheets() {
+  if (!accessToken) { triggerAuth(); return; }
+  const btn = document.getElementById('syncBtn');
+  btn.disabled = true; btn.textContent = '⏳ Syncing...';
+  showS('sheetsStatus','Clearing old data and uploading fresh inventory...','info');
+
+  const headers = ['VIN','STOCK #','YEAR','MAKE','MODEL','TRIM','MILES','EXT COLOR','PRICE','LOCATION'];
+  const rows = cleanData.map(r=>[r.VIN||'',r.STOCKNO||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',parseInt(r.ODOMETER)||'',r.EXTERIORCOLOR||'',parseFloat(r.SELLINGPRICE)||'',r.VEHICLELOCATION||'']);
+  const values = [headers,...rows];
+
+  try {
+    // Get existing sheets to check if today's tab exists
+    const metaRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}`,{
+      headers:{'Authorization':`Bearer ${accessToken}`}
+    });
+    const meta = await metaRes.json();
+    const existingSheets = meta.sheets.map(s=>s.properties.title);
+    const tabExists = existingSheets.includes(SHEET_TAB);
+
+    if (!tabExists) {
+      // Create a new tab with today's date
+      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}:batchUpdate`,{
+        method:'POST',
+        headers:{'Authorization':`Bearer ${accessToken}`,'Content-Type':'application/json'},
+        body: JSON.stringify({ requests:[{ addSheet:{ properties:{ title: SHEET_TAB }}}]})
+      });
+    } else {
+      // Clear existing tab
+      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(SHEET_TAB)}:clear`,{
+        method:'POST', headers:{'Authorization':`Bearer ${accessToken}`,'Content-Type':'application/json'}
+      });
+    }
+
+    // Write data to today's tab
+    const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(SHEET_TAB)}!A1?valueInputOption=RAW`,{
+      method:'PUT',
+      headers:{'Authorization':`Bearer ${accessToken}`,'Content-Type':'application/json'},
+      body: JSON.stringify({values})
+    });
+    if (res.ok) {
+      showS('sheetsStatus','','');
+      document.getElementById('sheetsBanner').style.display = 'flex';
+      btn.textContent = '✅ Synced!';
+      setTimeout(()=>{ btn.textContent='🔄 Sync Inventory to Google Sheet'; btn.disabled=false; }, 4000);
+    } else {
+      const err = await res.json();
+      if (err.error?.status==='UNAUTHENTICATED') {
+        accessToken=null; triggerAuth();
+        showS('sheetsStatus','Session expired — please sign in again.','error');
+      } else {
+        showS('sheetsStatus','Sync failed: '+(err.error?.message||'Unknown error'),'error');
+      }
+      btn.textContent='🔄 Sync Inventory to Google Sheet'; btn.disabled=false;
+    }
+  } catch(e) {
+    showS('sheetsStatus','Network error. Check your connection and try again.','error');
+    btn.textContent='🔄 Sync Inventory to Google Sheet'; btn.disabled=false;
+  }
+}
+
+// ── Email actions ──
+function openGmail() {
+  const sub = document.getElementById('emailSubject').value;
+  const body = document.getElementById('emailBody').value;
+  window.open(`https://mail.google.com/mail/?view=cm&fs=1&bcc=${encodeURIComponent(DEALER_EMAILS.join(','))}&su=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`,'_blank');
+  document.getElementById('gmailBanner').style.display='flex';
+}
+function copyBody() {
+  navigator.clipboard.writeText(document.getElementById('emailBody').value).then(()=>{
+    const b=event.target; b.textContent='✅ Copied!'; setTimeout(()=>b.textContent='📋 Copy Email Body',2000);
+  });
+}
+function copyBCC() {
+  navigator.clipboard.writeText(DEALER_EMAILS.join('; ')).then(()=>{
+    const b=event.target; b.textContent='✅ Copied!'; setTimeout(()=>b.textContent='📋 Copy BCC List',2000);
+  });
+}
+
+// ── Downloads ──
+function downloadExcel() {
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet([['VIN','STOCK #','YEAR','MAKE','MODEL','TRIM','MILES','EXT COLOR','PRICE','LOCATION'],...cleanData.map(r=>[r.VIN||'',r.STOCKNO||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',parseInt(r.ODOMETER)||'',r.EXTERIORCOLOR||'',parseFloat(r.SELLINGPRICE)||'',r.VEHICLELOCATION||''])]);
+  ws['!cols']=[20,11,6,11,12,22,10,22,10,9].map(w=>({wch:w}));
+  XLSX.utils.book_append_sheet(wb,ws,'Inventory');
+  XLSX.writeFile(wb,`VehicleBuyers_Inventory_${TODAY.short.replace('/','_')}.xlsx`);
+}
+function downloadPDF() {
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'landscape',unit:'pt',format:'letter'});
+  const w=doc.internal.pageSize.width;
+  const az=cleanData.filter(r=>r.VEHICLELOCATION==='AZ').length;
+  const tx=cleanData.filter(r=>r.VEHICLELOCATION==='TX').length;
+  doc.setFillColor(26,26,46); doc.rect(0,0,w,36,'F');
+  doc.setTextColor(255,255,255); doc.setFontSize(13); doc.setFont('helvetica','bold');
+  doc.text(`VEHICLE BUYERS — WHOLESALE INVENTORY — ${TODAY.long.toUpperCase()}`,w/2,22,{align:'center'});
+  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(232,184,75);
+  doc.text(`${cleanData.length} Units  •  ${az} Phoenix (AZ)  •  ${tx} Dallas (TX)  •  Nationwide Shipping`,w/2,31,{align:'center'});
+  doc.autoTable({
+    startY:42,
+    head:[['VIN','STOCK #','YEAR','MAKE','MODEL','TRIM','MILES','COLOR','PRICE','LOC']],
+    body:cleanData.map(r=>[r.VIN||'',r.STOCKNO||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',fmtMi(r.ODOMETER),r.EXTERIORCOLOR||'',fmtPr(r.SELLINGPRICE),r.VEHICLELOCATION||'']),
+    styles:{fontSize:7,cellPadding:3},
+    headStyles:{fillColor:[45,53,97],textColor:255,fontStyle:'bold'},
+    columnStyles:{0:{cellWidth:90},1:{cellWidth:55},2:{cellWidth:30},3:{cellWidth:60},4:{cellWidth:65},5:{cellWidth:115},6:{cellWidth:48},7:{cellWidth:105},8:{cellWidth:50,fontStyle:'bold',textColor:[26,107,42]},9:{cellWidth:28}},
+    didParseCell(data){
+      if(data.section==='body'){const loc=cleanData[data.row.index]?.VEHICLELOCATION;data.cell.styles.fillColor=loc==='AZ'?[232,244,253]:[255,248,232];}
+    },
+    margin:{left:20,right:20}
+  });
+  doc.save(`VehicleBuyers_Inventory_${TODAY.short.replace('/','_')}.pdf`);
+}
+
+// ── Helpers ──
+function showS(id,msg,type){
+  const el=document.getElementById(id);
+  if(!msg){el.style.display='none';return;}
+  el.textContent=msg; el.className=`sbar ${type}`; el.style.display='block';
+}
+function showProg(show){
+  const p=document.getElementById('prog'),pb=document.getElementById('progBar');
+  if(show){p.style.display='block';pb.style.width='0%';setTimeout(()=>pb.style.width='90%',50);}
+  else{pb.style.width='100%';setTimeout(()=>p.style.display='none',400);}
+}
+</script>
+</body>
+</html>
