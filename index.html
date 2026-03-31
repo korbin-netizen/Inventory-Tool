@@ -273,6 +273,7 @@ async function syncToSheets() {
     await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+SHEET_ID+'/values/'+encodeURIComponent(SHEET_TAB)+'!A1?valueInputOption=RAW',{method:'PUT',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({values:values})});
     var NC = NUM_COLS;
     var requests = [];
+    requests.push({repeatCell:{range:{sheetId:sheetId,startRowIndex:0,endRowIndex:1000,startColumnIndex:0,endColumnIndex:26},cell:{userEnteredFormat:{}},fields:'userEnteredFormat'}});
     requests.push({repeatCell:{range:{sheetId:sheetId,startRowIndex:0,endRowIndex:1,startColumnIndex:0,endColumnIndex:NC},cell:{userEnteredFormat:{backgroundColor:color('#1A1A2E'),textFormat:{foregroundColor:{red:1,green:1,blue:1},bold:true,fontSize:11},horizontalAlignment:'CENTER',verticalAlignment:'MIDDLE'}},fields:'userEnteredFormat(backgroundColor,textFormat,horizontalAlignment,verticalAlignment)'}});
     for (var i=0;i<cleanData.length;i++) {
       var bg = cleanData[i].VEHICLELOCATION==='AZ' ? color('#E8F4FD') : color('#FFF8E8');
