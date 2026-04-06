@@ -169,6 +169,21 @@ var SHEET_TAB = TODAY.short;
 var NUM_COLS = 13;
 document.getElementById('dateBadge').textContent = TODAY.long;
 function color(h){return {red:parseInt(h.slice(1,3),16)/255,green:parseInt(h.slice(3,5),16)/255,blue:parseInt(h.slice(5,7),16)/255};}
+function fmtMi(v){ var n=parseInt(v); return isNaN(n)?'':n.toLocaleString(); }
+function fmtPr(v){ var n=parseFloat(v); return isNaN(n)?'':'$'+Math.round(n).toLocaleString(); }
+function cleanTrans(t){
+  if(!t) return '';
+  t = t.trim();
+  var u = t.toUpperCase();
+  if(u.indexOf('CVT')>-1||u.indexOf('CONTINUOUSLY VARIABLE')>-1) return 'CVT';
+  if(u.indexOf('DUAL CLUTCH')>-1){var m=u.match(/(\d+)-SPEED/);return (m?m[1]+'-Speed ':'')+'Dual Clutch';}
+  if(u.indexOf('AUTO-SHIFT')>-1||u.indexOf('AUTOSHIFT')>-1) return 'Auto-Shift Manual';
+  var m=u.match(/(\d+)-SPEED/);
+  if(m){var s=m[1];if(u.indexOf('MANUAL')>-1)return s+'-Speed Manual';return s+'-Speed Automatic';}
+  if(u.indexOf('AUTOMATIC')>-1||u.indexOf('AUTO')>-1) return 'Automatic';
+  if(u.indexOf('MANUAL')>-1) return 'Manual';
+  return t;
+}
 function triggerAuth() {
   if (!window.google) { alert('Google Sign-In not loaded yet. Please wait and try again.'); return; }
   var client = google.accounts.oauth2.initTokenClient({
@@ -194,8 +209,6 @@ function resolveLoc(row) {
   if (loc==='AZ'||loc==='TX') return loc;
   return (row['STOCKNO']||'').toString().trim().toUpperCase().endsWith('D') ? 'TX' : 'AZ';
 }
-function fmtMi(v){ var n=parseInt(v); return isNaN(n)?'':n.toLocaleString(); }
-function fmtPr(v){ var n=parseFloat(v); return isNaN(n)?'':'$'+Math.round(n).toLocaleString(); }
 function handleFile(file) {
   if (!file||!file.name.endsWith('.csv')){ showS('uploadStatus','Please upload a CSV file.','error'); return; }
   showProg(true);
@@ -236,7 +249,7 @@ function buildPreview() {
   cleanData.forEach(function(r) {
     var loc = r.VEHICLELOCATION;
     var tr = document.createElement('tr');
-    tr.innerHTML = '<td>'+(r.STOCKNO||'')+'</td><td style="font-size:9px;color:#777">'+(r.VIN||'')+'</td><td>'+(r.YEAR||'')+'</td><td>'+(r.MAKE||'')+'</td><td>'+(r.MODEL||'')+'</td><td style="font-size:10px">'+(r.TRIM||'')+'</td><td>'+fmtMi(r.ODOMETER)+'</td><td style="font-size:10px">'+(r.ENGINE||'')+'</td><td style="font-size:10px">'+(r.DRIVELINE||'')+'</td><td style="font-size:10px">'+(r.TRANSMISSION||'')+'</td><td style="font-size:10px">'+(r.EXTERIORCOLOR||'')+'</td><td style="font-weight:700;color:#1a6b2a">'+fmtPr(r.SELLINGPRICE)+'</td><td><span class="tag tag-'+loc.toLowerCase()+'">'+loc+'</span></td>';
+    tr.innerHTML = '<td>'+(r.STOCKNO||'')+'</td><td style="font-size:9px;color:#777">'+(r.VIN||'')+'</td><td>'+(r.YEAR||'')+'</td><td>'+(r.MAKE||'')+'</td><td>'+(r.MODEL||'')+'</td><td style="font-size:10px">'+(r.TRIM||'')+'</td><td>'+fmtMi(r.ODOMETER)+'</td><td style="font-size:10px">'+(r.ENGINE||'')+'</td><td style="font-size:10px">'+(r.DRIVELINE||'')+'</td><td style="font-size:10px">'+cleanTrans(r.TRANSMISSION||'')+'</td><td style="font-size:10px">'+(r.EXTERIORCOLOR||'')+'</td><td style="font-weight:700;color:#1a6b2a">'+fmtPr(r.SELLINGPRICE)+'</td><td><span class="tag tag-'+loc.toLowerCase()+'">'+loc+'</span></td>';
     tb.appendChild(tr);
   });
 }
@@ -254,7 +267,7 @@ async function syncToSheets() {
   btn.disabled = true; btn.textContent = 'Syncing...';
   showS('sheetsStatus','Uploading fresh inventory...','info');
   var headers = ['STOCK #','VIN','YEAR','MAKE','MODEL','TRIM','MILES','ENGINE','DRIVELINE','TRANSMISSION','EXT COLOR','PRICE','LOCATION'];
-  var rows = cleanData.map(function(r){return [r.STOCKNO||'',r.VIN||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',parseInt(r.ODOMETER)||'',r.ENGINE||'',r.DRIVELINE||'',r.TRANSMISSION||'',r.EXTERIORCOLOR||'',parseFloat(r.SELLINGPRICE)||'',r.VEHICLELOCATION||''];});
+  var rows = cleanData.map(function(r){return [r.STOCKNO||'',r.VIN||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',parseInt(r.ODOMETER)||'',r.ENGINE||'',r.DRIVELINE||'',cleanTrans(r.TRANSMISSION||''),r.EXTERIORCOLOR||'',parseFloat(r.SELLINGPRICE)||'',r.VEHICLELOCATION||''];});
   var values = [headers].concat(rows);
   var totalRows = values.length;
   try {
@@ -315,7 +328,7 @@ function copyBCC() {
 }
 function downloadExcel() {
   var wb=XLSX.utils.book_new();
-  var wsData=[['STOCK #','VIN','YEAR','MAKE','MODEL','TRIM','MILES','ENGINE','DRIVELINE','TRANSMISSION','EXT COLOR','PRICE','LOCATION']].concat(cleanData.map(function(r){return [r.STOCKNO||'',r.VIN||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',parseInt(r.ODOMETER)||'',r.ENGINE||'',r.DRIVELINE||'',r.TRANSMISSION||'',r.EXTERIORCOLOR||'',parseFloat(r.SELLINGPRICE)||'',r.VEHICLELOCATION||''];}));
+  var wsData=[['STOCK #','VIN','YEAR','MAKE','MODEL','TRIM','MILES','ENGINE','DRIVELINE','TRANSMISSION','EXT COLOR','PRICE','LOCATION']].concat(cleanData.map(function(r){return [r.STOCKNO||'',r.VIN||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',parseInt(r.ODOMETER)||'',r.ENGINE||'',r.DRIVELINE||'',cleanTrans(r.TRANSMISSION||''),r.EXTERIORCOLOR||'',parseFloat(r.SELLINGPRICE)||'',r.VEHICLELOCATION||''];}));
   var ws=XLSX.utils.aoa_to_sheet(wsData);
   ws['!cols']=[11,20,6,11,12,20,9,16,14,20,18,10,9].map(function(w){return {wch:w};});
   XLSX.utils.book_append_sheet(wb,ws,'Inventory');
@@ -334,7 +347,7 @@ function downloadPDF() {
   doc.autoTable({
     startY:42,
     head:[['STOCK #','VIN','YEAR','MAKE','MODEL','TRIM','MILES','ENGINE','DRIVELINE','TRANSMISSION','COLOR','PRICE','LOC']],
-    body:cleanData.map(function(r){return [r.STOCKNO||'',r.VIN||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',fmtMi(r.ODOMETER),r.ENGINE||'',r.DRIVELINE||'',r.TRANSMISSION||'',r.EXTERIORCOLOR||'',fmtPr(r.SELLINGPRICE),r.VEHICLELOCATION||''];}),
+    body:cleanData.map(function(r){return [r.STOCKNO||'',r.VIN||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',fmtMi(r.ODOMETER),r.ENGINE||'',r.DRIVELINE||'',cleanTrans(r.TRANSMISSION||''),r.EXTERIORCOLOR||'',fmtPr(r.SELLINGPRICE),r.VEHICLELOCATION||''];}),
     styles:{fontSize:7,cellPadding:3},
     headStyles:{fillColor:[45,53,97],textColor:255,fontStyle:'bold'},
     columnStyles:{0:{cellWidth:52},1:{cellWidth:82},2:{cellWidth:28},3:{cellWidth:52},4:{cellWidth:58},5:{cellWidth:90},6:{cellWidth:42},7:{cellWidth:68},8:{cellWidth:58},9:{cellWidth:90},10:{cellWidth:70},11:{cellWidth:44,fontStyle:'bold',textColor:[26,107,42]},12:{cellWidth:28}},
