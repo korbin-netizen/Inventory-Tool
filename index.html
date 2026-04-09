@@ -15,6 +15,12 @@
   .header-title { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
   .header-sub { font-size: 12px; color: #E8B84B; margin-top: 3px; }
   .date-badge { background: #E8B84B; color: #1A1A2E; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 13px; }
+  .tabs { background: #2D3561; display: flex; padding: 0 32px; }
+  .tab { padding: 14px 24px; color: #aaa; font-size: 13px; font-weight: 700; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; }
+  .tab:hover { color: white; }
+  .tab.active { color: #E8B84B; border-bottom-color: #E8B84B; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
   .container { max-width: 980px; margin: 32px auto; padding: 0 20px; }
   .card { background: white; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 20px; overflow: hidden; }
   .card-header { background: #2D3561; color: white; padding: 14px 24px; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
@@ -37,7 +43,7 @@
   .stat.tx .num { color: #8a6b1a; }
   .ef { margin-bottom: 12px; }
   .ef label { font-size: 12px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
-  .ef input, .ef textarea { width: 100%; border: 1px solid #dde0ea; border-radius: 6px; padding: 8px 12px; font-size: 13px; font-family: Arial, sans-serif; color: #333; background: white; resize: vertical; }
+  .ef input, .ef textarea, .ef select { width: 100%; border: 1px solid #dde0ea; border-radius: 6px; padding: 8px 12px; font-size: 13px; font-family: Arial, sans-serif; color: #333; background: white; resize: vertical; }
   .ef textarea { min-height: 160px; }
   .bcc-box { background: #f0faf4; border: 1px solid #a8ddb9; border-radius: 6px; padding: 10px 12px; font-size: 11px; color: #1a6b2a; word-break: break-all; max-height: 80px; overflow-y: auto; }
   .btn { padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px; }
@@ -50,6 +56,8 @@
   .btn-sheets { background: #0F9D58; color: white; }
   .btn-sheets:hover:not(:disabled) { background: #0b7a44; }
   .btn-sheets:disabled { background: #aaa; color: #eee; cursor: not-allowed; }
+  .btn-red { background: #c0392b; color: white; }
+  .btn-red:hover { background: #a93226; }
   .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
   .progress { height: 6px; background: #e0e4f0; border-radius: 3px; margin-top: 12px; overflow: hidden; display: none; }
   .progress-bar { height: 100%; background: #E8B84B; border-radius: 3px; transition: width 0.4s; }
@@ -69,16 +77,30 @@
   .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; }
   .tag-az { background: #E8F4FD; color: #1a6b8a; }
   .tag-tx { background: #FFF8E8; color: #8a6b1a; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-grid .ef { margin-bottom: 0; }
+  .form-full { grid-column: 1 / -1; }
+  .onboard-preview { background: #f7f9ff; border: 1px solid #e0e4f0; border-radius: 8px; padding: 16px; font-size: 13px; color: #333; white-space: pre-wrap; line-height: 1.6; margin-top: 8px; min-height: 200px; font-family: Arial, sans-serif; }
+  .success-banner { background: #f0faf4; border: 1px solid #a8ddb9; border-radius: 10px; padding: 20px 24px; display: none; margin-top: 16px; }
+  .success-banner h3 { color: #1a6b2a; font-size: 15px; margin-bottom: 8px; }
+  .success-banner p { color: #2a7a3a; font-size: 13px; }
 </style>
 </head>
 <body>
 <div class="header">
   <div>
     <div class="header-title">VEHICLE BUYERS AUTO AUCTION</div>
-    <div class="header-sub">Daily Wholesale Inventory Tool</div>
+    <div class="header-sub">Wholesale Management Tool</div>
   </div>
   <div class="date-badge" id="dateBadge"></div>
 </div>
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('inventory')">Inventory Blast</div>
+  <div class="tab" onclick="switchTab('onboard')">Onboard Dealer</div>
+</div>
+
+<!-- INVENTORY TAB -->
+<div id="tab-inventory" class="tab-content active">
 <div class="container">
   <div class="card">
     <div class="card-header"><span class="step">1</span> Drop Your Daily CSV</div>
@@ -151,14 +173,106 @@
     </div>
   </div>
 </div>
+</div>
+
+<!-- ONBOARD DEALER TAB -->
+<div id="tab-onboard" class="tab-content">
+<div class="container">
+  <div class="card">
+    <div class="card-header"><span class="step">1</span> New Dealer Info</div>
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="ef">
+          <label>Dealership Name *</label>
+          <input type="text" id="ob-dealership" placeholder="e.g. Bob Johnson Auto" oninput="updatePreview()">
+        </div>
+        <div class="ef">
+          <label>State *</label>
+          <input type="text" id="ob-state" placeholder="e.g. AZ" maxlength="2" oninput="updatePreview()">
+        </div>
+        <div class="ef">
+          <label>Contact Name *</label>
+          <input type="text" id="ob-contact" placeholder="e.g. Frank Johnson" oninput="updatePreview()">
+        </div>
+        <div class="ef">
+          <label>Contact Email *</label>
+          <input type="email" id="ob-email" placeholder="e.g. frank@dealership.com" oninput="updatePreview()">
+        </div>
+        <div class="ef">
+          <label>Phone Number</label>
+          <input type="text" id="ob-phone" placeholder="e.g. 555-123-4567" oninput="updatePreview()">
+        </div>
+        <div class="ef">
+          <label>How did you find them?</label>
+          <select id="ob-source" oninput="updatePreview()">
+            <option value="Cold Call">Cold Call</option>
+            <option value="Facebook">Facebook</option>
+            <option value="Email Blast">Email Blast</option>
+            <option value="Referral">Referral</option>
+            <option value="Word of Mouth">Word of Mouth</option>
+            <option value="ACV">ACV</option>
+            <option value="Openlane">Openlane</option>
+          </select>
+        </div>
+        <div class="ef">
+          <label>Website Username</label>
+          <input type="text" id="ob-username" placeholder="e.g. frank@dealership.com" oninput="updatePreview()">
+        </div>
+        <div class="ef">
+          <label>Website Password</label>
+          <input type="text" id="ob-password" placeholder="e.g. Frank123" oninput="updatePreview()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="step">2</span> Email Preview</div>
+    <div class="card-body">
+      <p style="font-size:12px;color:#777;margin-bottom:10px">This is what will be sent. Edit the email body below if needed.</p>
+      <div class="ef">
+        <label>Email Subject</label>
+        <input type="text" id="ob-subject" value="Vehicle Buyers Auto Auction — Welcome!">
+      </div>
+      <div class="ef">
+        <label>Email Body</label>
+        <textarea id="ob-body" style="min-height:280px;" oninput=""></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="step">3</span> Send & Save</div>
+    <div class="card-body">
+      <div class="signin-row">
+        <button class="btn btn-dark" onclick="triggerAuthOnboard()" id="ob-signInBtn">Sign in with Google</button>
+        <span class="signin-lbl" id="ob-signinLbl">Not signed in</span>
+      </div>
+      <hr class="div">
+      <p style="font-size:13px;color:#555;margin-bottom:16px">This will send the welcome email to the dealer AND add them to your Dealer Network Google Sheet simultaneously.</p>
+      <div class="btn-row">
+        <button class="btn btn-grn" onclick="onboardDealer()" id="ob-sendBtn">Send Email + Add to Sheet</button>
+        <button class="btn btn-gold" onclick="openGmailOnboard()">Open in Gmail Instead</button>
+      </div>
+      <div class="sbar" id="ob-status"></div>
+      <div class="success-banner" id="ob-success">
+        <h3>✓ Dealer onboarded successfully!</h3>
+        <p id="ob-success-msg"></p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
 <script>
 var CLIENT_ID = '528122420647-i9m143bl4ves1dtb2jg0k5q6oek3b014.apps.googleusercontent.com';
 var SHEET_ID = '1SZrZV71WAAJ7jHpr_UlieZzCgyDV-GS_dJpFSk-rxcg';
-var SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
+var DEALER_SHEET_ID = '1CoVTfzo5R_XPqVawdlWsT5zlN6us90no9RP5pzYCKbY';
+var SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/gmail.send';
 var SHEETS_LINK = 'https://docs.google.com/spreadsheets/d/1SZrZV71WAAJ7jHpr_UlieZzCgyDV-GS_dJpFSk-rxcg/edit?usp=sharing';
 var WEBSITE = 'www.vehiclebuyersautoauction.com';
 const DEALER_EMAILS = ["vincent.martincavage@car-mart.com","dportillo@orielly.com","nfoster@driveplanet.com","guyg@lambauto.com","pete@lakepowellford.com","droller@yatesbuickgmc.com","bradf@bergegroup.com","kevindewey@santanford.com","carlos@universalmitsubishi.com","garen@subaruofglendale.net","cmonroy0126@gmail.com","ihartman@hgreg.com","rcastillo@epicchevrolet.com","BMcQueen@penskeautomotive.com","amanypenny@starfordinc.com","Jeff@hondaofpasadena.com","jlee@metrohonda.com","jharmond@airportmarinahonda.com","Harry@simivalleycdjr.com","eli@dcmitsu.com","Curtisking94571@gmail.com","sfields@mossy.com","OsMendoza@mossy.com","amorfin@bakersfieldhyundai.com","cmcandrew@niello.com","mmaledon@elwaydealers.net","djordan@castlerockautoplex.com","bdanner@freewayfordonline.com","jbeard@elwaydealers.net","Daltonplattner@plattnerautomotivegroup.com","kevinejohns@gmail.com","JasonHarrison@lithia.com","Bzukas@mariontoyota.com","bnikolov@motorwerks.com","Kerry.boettcher@kunes.com","Kelly@steveschmitt.com","alex@marshallchevrolet.com","Steve.medina@rohrmanauto.com","levi.laws@rohrmanauto.com","tgriffin@victorykc.com","mclark@foxmotors.com","dchung@lssubaru.com","tyler.yates@heartlandcdjr.com","lucas@heartlandchevy.com","mdavis@justbetterauto.com","Adamg@bobmariano.com","stevenfrancoeur@merchantsauto.com","Pierre@karmawestfield.com","MMarsh@vtaig.com","ccooke@qualitydeal.com","jonathanb@freemanauto.com","Jkilway@casaautogroup.com","mmccarty@chalmersford.com","astrebe@chalmersford.com","1mesquitesales@gmail.com","awatson@gaudinford.com","devin@r21motorsports.com","rmurray@fivestaronline.net","price@fivestaronline.net","jordan.baker@fivestaronline.net","spankow@basilcars.com","Nick.landman17@gmail.com","Jewls@legendmotors.com","Joshb@chevroletoftroy.com","jfulep@serpentinichevy.com","rvirgen@spartanburghonda.com","tswanger@verneide.com","German.sanchez@dickpoe.com","cpolk@gpolk.com","Richard.andrews@glasscockchevrolet.com","andrew_osterhoudt@jenkinscars.com","Jason.leney@holidayautogroup.com","rfugate@brinsonautogroup.com","tony@youdriveauto.com","scummings@gayfamilyauto.com","zsanders@foundationauto.com","ryan@sames.net","rcarrera@sames.net","bwilkins@teamgranger.com","jfigueroa@metronissandallas.com","paulsharp@fredhaasnissan.com","brentwilliams@covertauto.com","jessegenovese@covertauto.com","tylerishak@covertauto.com","justingreene@brownfieldautomotive.com","ktcoles@msn.com","nickjex@heydoug.net","parker.w@heritageeprice.com","bheffron@kengarff.com","blain@wattsautomotive.com","wardf@chevroletofeverett.com","rmoe@chevroletofeverett.com","Dmcmiller@iahyundai.com","mattmartin@gabrieljordan.com","chet.crain@landerscorp.com","jsims@seguinchevrolet.com","cbolger@hessertchevy.com","Slowrider011389@gmail.com","tszymanski@donlarson.com","ffitzmaurice@bobjohnsonauto.com","dsukhai23@gmail.com","rdiaz@myalexandertoyota.com","Thompson.kevin93@gmail.com","Jckksteiner@gmail.com","jeremy.nunes@duprattford.com","Jeremydchick@gmail.com","josh@meadowsford.com","atyler@walser.com","lterry@gpolk.com","rpage@steadauto.com","jsminear@gmail.com","aron@meadowsautogroup.com","Shane.varner@kcpremierauto.com","roberto@cdjrelmhurst.com","evirgen@cdjrelmhurst.com"];
-var cleanData = [], accessToken = null;
+var cleanData = [], accessToken = null, onboardAccessToken = null;
 var d = new Date();
 var TODAY = {
   day: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()],
@@ -168,6 +282,163 @@ var TODAY = {
 var SHEET_TAB = TODAY.short;
 var NUM_COLS = 13;
 document.getElementById('dateBadge').textContent = TODAY.long;
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// ─── ONBOARD DEALER ───────────────────────────────────────────────
+function updatePreview() {
+  var contact = document.getElementById('ob-contact').value || '[Contact Name]';
+  var dealership = document.getElementById('ob-dealership').value || '[Dealership]';
+  var username = document.getElementById('ob-username').value || '[username]';
+  var password = document.getElementById('ob-password').value || '[password]';
+  var firstName = contact.split(' ')[0] || contact;
+
+  var body = firstName + ',\n\n';
+  body += "Here's our refreshed inventory list. Units are located in Phoenix, AZ 85027 and Lewisville, TX 75056.\n\n";
+  body += "The Google Sheets link is below, or I can attach a PDF with the list. Use whichever is more convenient!\n\n";
+  body += SHEETS_LINK + '\n\n';
+  body += 'These vehicles are also available for purchase online at ' + WEBSITE + '\n\n';
+
+  if (username && username !== '[username]') {
+    body += 'Your login:\n';
+    body += 'Username: ' + username + '\n';
+    body += 'Password: ' + password + '\n\n';
+  }
+
+  body += "We represent all vehicles the same so you don't have to second-guess what you need to do for recon. Recon steps we handle (if needed on the unit): PDR, Windshields, tires (if they're dry rotted, nail in one, or under 5/32nds), bodywork, and electronic needs. We guarantee motors, transmissions, frame, fire and flood damage.\n\n";
+  body += "What we don't cover: Brakes, and fluids.\n\n";
+  body += "We will send vehicle and title, I just expect payment within 7-10 days.\n\n";
+  body += "I'd be happy to answer any questions you have. Look forward to hearing from you.\n\n";
+  body += "--\nKorbin Plotke | Wholesale Manager\nVEHICLE BUYERS AUTO AUCTION\nCell: 480-646-0135 | vehiclebuyersautoauction.com";
+
+  document.getElementById('ob-body').value = body;
+}
+
+// Initialize preview on load
+updatePreview();
+
+function triggerAuthOnboard() {
+  if (!window.google) { alert('Google Sign-In not loaded yet. Please wait and try again.'); return; }
+  var client = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPES,
+    callback: function(resp) {
+      if (resp.access_token) {
+        onboardAccessToken = resp.access_token;
+        accessToken = resp.access_token; // share token for both tabs
+        document.getElementById('ob-signinLbl').textContent = 'Signed in — ready to send';
+        document.getElementById('ob-signinLbl').className = 'signin-lbl ok';
+        document.getElementById('ob-signInBtn').textContent = 'Signed In';
+        document.getElementById('signinLbl').textContent = 'Signed in - ready to sync';
+        document.getElementById('signinLbl').className = 'signin-lbl ok';
+        document.getElementById('signInBtn').textContent = 'Signed In';
+        if (cleanData.length > 0) document.getElementById('syncBtn').disabled = false;
+      }
+    }
+  });
+  client.requestAccessToken();
+}
+
+async function onboardDealer() {
+  var dealership = document.getElementById('ob-dealership').value.trim();
+  var state = document.getElementById('ob-state').value.trim().toUpperCase();
+  var contact = document.getElementById('ob-contact').value.trim();
+  var email = document.getElementById('ob-email').value.trim();
+  var phone = document.getElementById('ob-phone').value.trim();
+  var source = document.getElementById('ob-source').value;
+  var subject = document.getElementById('ob-subject').value.trim();
+  var body = document.getElementById('ob-body').value.trim();
+
+  if (!dealership || !contact || !email) {
+    showS('ob-status', 'Please fill in Dealership, Contact Name, and Email.', 'error');
+    return;
+  }
+  if (!onboardAccessToken) {
+    showS('ob-status', 'Please sign in with Google first.', 'error');
+    return;
+  }
+
+  showS('ob-status', 'Sending email and adding to sheet...', 'info');
+
+  try {
+    // 1. Send email via Gmail API
+    var emailContent = 'To: ' + email + '\r\n' +
+      'Subject: ' + subject + '\r\n' +
+      'Content-Type: text/plain; charset=utf-8\r\n\r\n' +
+      body;
+    var encoded = btoa(unescape(encodeURIComponent(emailContent)))
+      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+    var gmailRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + onboardAccessToken,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ raw: encoded })
+    });
+
+    if (!gmailRes.ok) {
+      var err = await gmailRes.json();
+      throw new Error('Gmail error: ' + JSON.stringify(err));
+    }
+
+    // 2. Add to Dealer Network Google Sheet (Network tab)
+    var sheetRes = await fetch(
+      'https://sheets.googleapis.com/v4/spreadsheets/' + DEALER_SHEET_ID + '/values/Network!A:F:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS',
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + onboardAccessToken,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          values: [[dealership, state, contact, email, phone || source, 'Signed up']]
+        })
+      }
+    );
+
+    if (!sheetRes.ok) {
+      var err2 = await sheetRes.json();
+      throw new Error('Sheets error: ' + JSON.stringify(err2));
+    }
+
+    // Success
+    showS('ob-status', '', '');
+    document.getElementById('ob-success').style.display = 'block';
+    document.getElementById('ob-success-msg').textContent =
+      'Welcome email sent to ' + contact + ' at ' + email + '. ' + dealership + ' added to your Dealer Network sheet.';
+
+    // Clear form
+    setTimeout(function() {
+      document.getElementById('ob-dealership').value = '';
+      document.getElementById('ob-state').value = '';
+      document.getElementById('ob-contact').value = '';
+      document.getElementById('ob-email').value = '';
+      document.getElementById('ob-phone').value = '';
+      document.getElementById('ob-success').style.display = 'none';
+      updatePreview();
+    }, 5000);
+
+  } catch(e) {
+    showS('ob-status', 'Error: ' + e.toString(), 'error');
+  }
+}
+
+function openGmailOnboard() {
+  var email = document.getElementById('ob-email').value.trim();
+  var subject = document.getElementById('ob-subject').value.trim();
+  var body = document.getElementById('ob-body').value.trim();
+  if (!email) { showS('ob-status', 'Please enter a dealer email address first.', 'error'); return; }
+  window.open('https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(email) + '&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body), '_blank');
+}
+
+// ─── INVENTORY TOOL ───────────────────────────────────────────────
 function color(h){return {red:parseInt(h.slice(1,3),16)/255,green:parseInt(h.slice(3,5),16)/255,blue:parseInt(h.slice(5,7),16)/255};}
 function fmtMi(v){ var n=parseInt(v); return isNaN(n)?'':n.toLocaleString(); }
 function fmtPr(v){ var n=parseFloat(v); return isNaN(n)?'':'$'+Math.round(n).toLocaleString(); }
@@ -191,9 +462,13 @@ function triggerAuth() {
     callback: function(resp) {
       if (resp.access_token) {
         accessToken = resp.access_token;
+        onboardAccessToken = resp.access_token;
         document.getElementById('signinLbl').textContent = 'Signed in - ready to sync';
         document.getElementById('signinLbl').className = 'signin-lbl ok';
         document.getElementById('signInBtn').textContent = 'Signed In';
+        document.getElementById('ob-signinLbl').textContent = 'Signed in — ready to send';
+        document.getElementById('ob-signinLbl').className = 'signin-lbl ok';
+        document.getElementById('ob-signInBtn').textContent = 'Signed In';
         if (cleanData.length > 0) document.getElementById('syncBtn').disabled = false;
       }
     }
