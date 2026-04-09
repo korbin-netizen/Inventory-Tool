@@ -90,16 +90,17 @@
   .rte-color-wrap { display: flex; align-items: center; gap: 3px; }
   .rte-color-wrap span { font-size: 11px; color: #777; }
   .rte-color { width: 26px; height: 26px; border: 1px solid #dde0ea; border-radius: 4px; cursor: pointer; padding: 2px; }
-  .rte-body { border: 1px solid #dde0ea; border-radius: 0 0 6px 6px; min-height: 260px; max-height: 400px; overflow-y: auto; padding: 14px; font-size: 13px; font-family: Arial, sans-serif; color: #333; line-height: 1.7; outline: none; background: white; }
+  .rte-body { border: 1px solid #dde0ea; border-radius: 0 0 6px 6px; min-height: 260px; max-height: 400px; overflow-y: auto; padding: 14px; font-size: 13px; font-family: Arial, sans-serif; color: #333; line-height: 1.5; outline: none; background: white; }
   .rte-body:focus { border-color: #2D3561; }
+  .rte-body p { margin: 0 0 8px 0; }
   .sig-preview { border-top: 1px solid #e0e0e0; margin-top: 16px; padding-top: 14px; font-family: Arial, sans-serif; }
-  .sig-dashes { color: #666; font-size: 13px; margin-bottom: 8px; }
-  .sig-name-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .sig-dashes { color: #666; font-size: 13px; margin-bottom: 6px; }
+  .sig-name-row { display: flex; align-items: center; gap: 10px; margin-bottom: 3px; }
   .sig-name { font-weight: 700; font-size: 14px; color: #111; }
   .sig-pipe { color: #aaa; font-size: 14px; }
   .sig-title { font-size: 14px; color: #555; }
-  .sig-company { font-size: 12px; color: #888; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
-  .sig-line { border: none; border-top: 1px solid #ddd; margin: 8px 0; }
+  .sig-company { font-size: 12px; color: #888; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; margin-bottom: 6px; }
+  .sig-line { border: none; border-top: 1px solid #ddd; margin: 6px 0; }
   .sig-contact { font-size: 13px; color: #555; display: flex; align-items: center; gap: 10px; }
   .sig-contact a { color: #111; text-decoration: underline; }
 </style>
@@ -124,8 +125,8 @@
     <div class="card-header"><span class="step">1</span> Drop Your Daily CSV</div>
     <div class="card-body">
       <div class="drop-zone" id="dropZone">
-        <div class="icon">📂</div>
-        <h3>Drag & drop your inventory CSV here</h3>
+        <div class="icon">&#128194;</div>
+        <h3>Drag &amp; drop your inventory CSV here</h3>
         <p>Or use the Browse button below</p>
       </div>
       <input type="file" id="fileInput" accept=".csv">
@@ -140,7 +141,7 @@
     </div>
   </div>
   <div class="card" id="previewCard" style="display:none">
-    <div class="card-header"><span class="step">2</span> Preview & Download Files</div>
+    <div class="card-header"><span class="step">2</span> Preview &amp; Download Files</div>
     <div class="card-body">
       <div class="table-wrap">
         <table class="pt">
@@ -200,7 +201,7 @@
     <div class="card-header"><span class="step">1</span> New Dealer Info</div>
     <div class="card-body">
       <div class="csv-warning" id="csvWarning">
-        ⚠️ No inventory CSV loaded yet today. Drop a CSV in the Inventory Blast tab first to attach a fresh inventory list to this email.
+        No inventory CSV loaded yet today. Drop a CSV in the Inventory Blast tab first to attach a fresh inventory list to this email.
       </div>
       <div class="form-grid">
         <div class="ef">
@@ -252,11 +253,11 @@
     <div class="card-body">
       <div class="ef" style="margin-bottom:16px">
         <label>Subject</label>
-        <input type="text" id="ob-subject" value="Vehicle Buyers Auto Auction — Welcome!">
+        <input type="text" id="ob-subject" value="Vehicle Buyers Auto Auction - Welcome!">
       </div>
       <label class="rte-label">Email Body</label>
       <div class="rte-toolbar">
-        <select class="rte-select" onchange="execCmd('fontSize', this.value); this.value='3'" title="Font Size">
+        <select class="rte-select" onchange="execCmd('fontSize', this.value); this.value='3'">
           <option value="3">Size</option>
           <option value="1">Small</option>
           <option value="3">Normal</option>
@@ -264,27 +265,27 @@
           <option value="5">X-Large</option>
         </select>
         <div class="rte-sep"></div>
-        <button class="rte-btn" onclick="execCmd('bold')" title="Bold"><b>B</b></button>
-        <button class="rte-btn" onclick="execCmd('italic')" title="Italic"><i>I</i></button>
-        <button class="rte-btn" onclick="execCmd('underline')" title="Underline"><u>U</u></button>
+        <button class="rte-btn" onclick="execCmd('bold')"><b>B</b></button>
+        <button class="rte-btn" onclick="execCmd('italic')"><i>I</i></button>
+        <button class="rte-btn" onclick="execCmd('underline')"><u>U</u></button>
         <div class="rte-sep"></div>
-        <button class="rte-btn" onclick="execCmd('insertUnorderedList')" title="Bullet List">&#8226; List</button>
-        <button class="rte-btn" onclick="execCmd('insertOrderedList')" title="Numbered List">1. List</button>
+        <button class="rte-btn" onclick="execCmd('insertUnorderedList')">&#8226; List</button>
+        <button class="rte-btn" onclick="execCmd('insertOrderedList')">1. List</button>
         <div class="rte-sep"></div>
-        <button class="rte-btn" onclick="execCmd('justifyLeft')" title="Align Left">&#8676;</button>
-        <button class="rte-btn" onclick="execCmd('justifyCenter')" title="Center">&#8677;</button>
+        <button class="rte-btn" onclick="execCmd('justifyLeft')">&#8676;</button>
+        <button class="rte-btn" onclick="execCmd('justifyCenter')">&#8677;</button>
         <div class="rte-sep"></div>
         <div class="rte-color-wrap">
           <span>Text</span>
-          <input type="color" class="rte-color" value="#000000" onchange="execCmd('foreColor', this.value)" title="Text Color">
+          <input type="color" class="rte-color" value="#000000" onchange="execCmd('foreColor', this.value)">
         </div>
         <div class="rte-color-wrap">
           <span>Highlight</span>
-          <input type="color" class="rte-color" value="#FFFF00" onchange="execCmd('hiliteColor', this.value)" title="Highlight Color">
+          <input type="color" class="rte-color" value="#FFFF00" onchange="applyHighlight(this.value)">
         </div>
         <div class="rte-sep"></div>
-        <button class="rte-btn" onclick="execCmd('removeFormat')" title="Clear Formatting">Clear</button>
-        <button class="rte-btn" onclick="insertLink()" title="Insert Link">Link</button>
+        <button class="rte-btn" onclick="execCmd('removeFormat')">Clear</button>
+        <button class="rte-btn" onclick="insertLink()">Link</button>
       </div>
       <div class="rte-body" id="rteBody" contenteditable="true"></div>
       <div class="sig-preview">
@@ -305,7 +306,7 @@
   </div>
 
   <div class="card">
-    <div class="card-header"><span class="step">3</span> Send & Save</div>
+    <div class="card-header"><span class="step">3</span> Send &amp; Save</div>
     <div class="card-body">
       <div class="signin-row">
         <button class="btn btn-dark" onclick="triggerAuthOnboard()" id="ob-signInBtn">Sign in with Google</button>
@@ -320,7 +321,7 @@
       </div>
       <div class="sbar" id="ob-status"></div>
       <div class="success-banner" id="ob-success">
-        <h3>✓ Dealer onboarded successfully!</h3>
+        <h3>Dealer onboarded successfully!</h3>
         <p id="ob-success-msg"></p>
       </div>
     </div>
@@ -349,6 +350,13 @@ var SHEET_TAB = TODAY.short;
 var NUM_COLS = 13;
 document.getElementById('dateBadge').textContent = TODAY.long;
 
+function getGreeting() {
+  var h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
 function switchTab(tab, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -362,6 +370,17 @@ function execCmd(cmd, val) {
   document.execCommand(cmd, false, val || null);
 }
 
+function applyHighlight(color) {
+  var rte = document.getElementById('rteBody');
+  rte.focus();
+  var sel = window.getSelection();
+  if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
+    document.execCommand('backColor', false, color);
+  } else {
+    alert('Please select some text first, then click the highlight color.');
+  }
+}
+
 function insertLink() {
   var url = prompt('Enter URL:', 'https://');
   if (url) { document.getElementById('rteBody').focus(); document.execCommand('createLink', false, url); }
@@ -372,24 +391,24 @@ function checkCSVStatus() {
   var pdfStatus = document.getElementById('ob-pdf-status');
   if (cleanData.length > 0) {
     warning.style.display = 'none';
-    pdfStatus.innerHTML = '✅ Fresh inventory PDF ready to attach (' + cleanData.length + ' units from today\'s CSV)';
+    pdfStatus.innerHTML = '&#10003; Fresh inventory PDF ready to attach (' + cleanData.length + ' units from today\'s CSV)';
     pdfStatus.style.color = '#1a6b2a';
   } else {
     warning.style.display = 'block';
-    pdfStatus.innerHTML = '⚠️ No PDF will be attached — load a CSV in the Inventory Blast tab first';
+    pdfStatus.innerHTML = 'No PDF will be attached - load a CSV in the Inventory Blast tab first';
     pdfStatus.style.color = '#7a5a00';
   }
 }
 
 function getSignatureHTML() {
-  return '<div style="font-family:Arial,sans-serif;margin-top:20px;padding-top:14px;border-top:1px solid #e0e0e0;">' +
-    '<p style="color:#666;font-size:13px;margin-bottom:8px;">--</p>' +
-    '<p style="margin-bottom:4px;"><strong style="font-size:14px;color:#111;">Korbin Plotke</strong>' +
-    '<span style="color:#aaa;margin:0 8px;font-size:14px;">|</span>' +
+  return '<div style="font-family:Arial,sans-serif;margin-top:16px;padding-top:12px;border-top:1px solid #e0e0e0;">' +
+    '<p style="color:#666;font-size:13px;margin:0 0 6px 0;">--</p>' +
+    '<p style="margin:0 0 3px 0;"><strong style="font-size:14px;color:#111;">Korbin Plotke</strong>' +
+    '<span style="color:#aaa;margin:0 8px;">|</span>' +
     '<span style="font-size:14px;color:#555;">Wholesale Manager</span></p>' +
-    '<p style="font-size:12px;color:#888;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin-bottom:8px;">Vehicle Buyers Auto Auction</p>' +
-    '<hr style="border:none;border-top:1px solid #ddd;margin:8px 0;">' +
-    '<p style="font-size:13px;color:#555;">Cell: 480-646-0135 &nbsp;|&nbsp;' +
+    '<p style="font-size:12px;color:#888;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin:0 0 6px 0;">Vehicle Buyers Auto Auction</p>' +
+    '<hr style="border:none;border-top:1px solid #ddd;margin:6px 0;">' +
+    '<p style="font-size:13px;color:#555;margin:0;">Cell: 480-646-0135 &nbsp;|&nbsp;' +
     '<a href="https://www.vehiclebuyersautoauction.com" style="color:#111;text-decoration:underline;">vehiclebuyersautoauction.com</a></p>' +
     '</div>';
 }
@@ -398,18 +417,20 @@ function updatePreview() {
   var contact = document.getElementById('ob-contact').value || '';
   var username = document.getElementById('ob-username').value || '';
   var password = document.getElementById('ob-password').value || '';
-  var firstName = contact.split(' ')[0] || 'there';
-  var html = '<p>' + firstName + ',</p><br>';
-  html += '<p>Here\'s our refreshed inventory list. Units are located in Phoenix, AZ 85027 and Lewisville, TX 75056.</p><br>';
-  html += '<p>The Google Sheets link is below, or I can attach a PDF with the list. Use whichever is more convenient!</p><br>';
-  html += '<p><a href="' + SHEETS_LINK + '">' + SHEETS_LINK + '</a></p><br>';
-  html += '<p>These vehicles are also available for purchase online at <a href="https://' + WEBSITE + '">' + WEBSITE + '</a></p><br>';
+  var firstName = contact.split(' ')[0] || '';
+  var greeting = firstName ? getGreeting() + ' ' + firstName + ',' : getGreeting() + ',';
+
+  var html = '<p>' + greeting + '</p>';
+  html += '<p>Here\'s our refreshed inventory list. Units are located in Phoenix, AZ 85027 and Lewisville, TX 75056.</p>';
+  html += '<p>The Google Sheets link is below, or I can attach a PDF with the list. Use whichever is more convenient!</p>';
+  html += '<p><a href="' + SHEETS_LINK + '">' + SHEETS_LINK + '</a></p>';
+  html += '<p>These vehicles are also available for purchase online at <a href="https://' + WEBSITE + '">' + WEBSITE + '</a></p>';
   if (username) {
-    html += '<p><strong>Your login:</strong><br>Username: ' + username + '<br>Password: ' + (password || '') + '</p><br>';
+    html += '<p><strong>Your login:</strong><br>Username: ' + username + '<br>Password: ' + (password || '') + '</p>';
   }
-  html += '<p>We represent all vehicles the same so you don\'t have to second-guess what you need to do for recon. Recon steps we handle (if needed on the unit): PDR, Windshields, tires (if they\'re dry rotted, nail in one, or under 5/32nds), bodywork, and electronic needs. We guarantee motors, transmissions, frame, fire and flood damage.</p><br>';
-  html += '<p>What we don\'t cover: Brakes, and fluids.</p><br>';
-  html += '<p>We will send vehicle and title, I just expect payment within 7-10 days.</p><br>';
+  html += '<p>We represent all vehicles the same so you don\'t have to second-guess what you need to do for recon. Recon steps we handle (if needed on the unit): PDR, Windshields, tires (if they\'re dry rotted, nail in one, or under 5/32nds), bodywork, and electronic needs. We guarantee motors, transmissions, frame, fire and flood damage.</p>';
+  html += '<p>What we don\'t cover: Brakes, and fluids.</p>';
+  html += '<p>We will send vehicle and title, I just expect payment within 7-10 days.</p>';
   html += '<p>I\'d be happy to answer any questions you have. Look forward to hearing from you.</p>';
   document.getElementById('rteBody').innerHTML = html;
 }
@@ -425,7 +446,7 @@ function triggerAuthOnboard() {
       if (resp.access_token) {
         onboardAccessToken = resp.access_token;
         accessToken = resp.access_token;
-        document.getElementById('ob-signinLbl').textContent = 'Signed in — ready to send';
+        document.getElementById('ob-signinLbl').textContent = 'Signed in - ready to send';
         document.getElementById('ob-signinLbl').className = 'signin-lbl ok';
         document.getElementById('ob-signInBtn').textContent = 'Signed In';
         document.getElementById('signinLbl').textContent = 'Signed in - ready to sync';
@@ -451,7 +472,7 @@ async function onboardDealer() {
   if (!onboardAccessToken) { showS('ob-status','Please sign in with Google first.','error'); return; }
   showS('ob-status','Sending email and adding to sheet...','info');
   try {
-    var boundary = 'VehicleBuyers_' + Date.now();
+    var boundary = 'VB_' + Date.now();
     var emailLines = [];
     emailLines.push('To: ' + email);
     emailLines.push('Subject: ' + subject);
@@ -499,10 +520,10 @@ function generatePDFBase64() {
     var w=doc.internal.pageSize.width;
     var az=cleanData.filter(r=>r.VEHICLELOCATION==='AZ').length;
     var tx=cleanData.filter(r=>r.VEHICLELOCATION==='TX').length;
-    doc.setFillColor(26,26,46); doc.rect(0,0,w,36,'F');
-    doc.setTextColor(255,255,255); doc.setFontSize(13); doc.setFont('helvetica','bold');
+    doc.setFillColor(26,26,46);doc.rect(0,0,w,36,'F');
+    doc.setTextColor(255,255,255);doc.setFontSize(13);doc.setFont('helvetica','bold');
     doc.text('VEHICLE BUYERS - WHOLESALE INVENTORY - '+TODAY.long.toUpperCase(),w/2,22,{align:'center'});
-    doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(232,184,75);
+    doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(232,184,75);
     doc.text(cleanData.length+' Units  -  '+az+' Phoenix (AZ)  -  '+tx+' Dallas (TX)  -  Nationwide Shipping',w/2,31,{align:'center'});
     doc.autoTable({startY:42,head:[['STOCK #','VIN','YEAR','MAKE','MODEL','TRIM','MILES','ENGINE','DRIVELINE','TRANSMISSION','COLOR','PRICE','LOC']],body:cleanData.map(r=>[r.STOCKNO||'',r.VIN||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',fmtMi(r.ODOMETER),r.ENGINE||'',r.DRIVELINE||'',cleanTrans(r.TRANSMISSION||''),r.EXTERIORCOLOR||'',fmtPr(r.SELLINGPRICE),r.VEHICLELOCATION||'']),styles:{fontSize:7,cellPadding:3},headStyles:{fillColor:[45,53,97],textColor:255,fontStyle:'bold'},columnStyles:{0:{cellWidth:52},1:{cellWidth:82},2:{cellWidth:28},3:{cellWidth:52},4:{cellWidth:58},5:{cellWidth:90},6:{cellWidth:42},7:{cellWidth:68},8:{cellWidth:58},9:{cellWidth:90},10:{cellWidth:70},11:{cellWidth:44,fontStyle:'bold',textColor:[26,107,42]},12:{cellWidth:28}},didParseCell:function(data){if(data.section==='body'){var loc=cleanData[data.row.index]&&cleanData[data.row.index].VEHICLELOCATION;data.cell.styles.fillColor=loc==='AZ'?[232,244,253]:[255,248,232];}},margin:{left:20,right:20}});
     return btoa(doc.output());
@@ -518,10 +539,10 @@ function openGmailOnboard() {
 }
 
 function color(h){return {red:parseInt(h.slice(1,3),16)/255,green:parseInt(h.slice(3,5),16)/255,blue:parseInt(h.slice(5,7),16)/255};}
-function fmtMi(v){ var n=parseInt(v); return isNaN(n)?'':n.toLocaleString(); }
-function fmtPr(v){ var n=parseFloat(v); return isNaN(n)?'':'$'+Math.round(n).toLocaleString(); }
+function fmtMi(v){var n=parseInt(v);return isNaN(n)?'':n.toLocaleString();}
+function fmtPr(v){var n=parseFloat(v);return isNaN(n)?'':'$'+Math.round(n).toLocaleString();}
 function cleanTrans(t){
-  if(!t) return ''; t=t.trim(); var u=t.toUpperCase();
+  if(!t) return '';t=t.trim();var u=t.toUpperCase();
   if(u.indexOf('CVT')>-1||u.indexOf('CONTINUOUSLY VARIABLE')>-1) return 'CVT';
   if(u.indexOf('DUAL CLUTCH')>-1){var m=u.match(/(\d+)-SPEED/);return (m?m[1]+'-Speed ':'')+'Dual Clutch';}
   if(u.indexOf('AUTO-SHIFT')>-1||u.indexOf('AUTOSHIFT')>-1) return 'Auto-Shift Manual';
@@ -538,14 +559,14 @@ function triggerAuth() {
     client_id: CLIENT_ID, scope: SCOPES,
     callback: function(resp) {
       if (resp.access_token) {
-        accessToken = resp.access_token; onboardAccessToken = resp.access_token;
+        accessToken=resp.access_token;onboardAccessToken=resp.access_token;
         document.getElementById('signinLbl').textContent='Signed in - ready to sync';
         document.getElementById('signinLbl').className='signin-lbl ok';
         document.getElementById('signInBtn').textContent='Signed In';
-        document.getElementById('ob-signinLbl').textContent='Signed in — ready to send';
+        document.getElementById('ob-signinLbl').textContent='Signed in - ready to send';
         document.getElementById('ob-signinLbl').className='signin-lbl ok';
         document.getElementById('ob-signInBtn').textContent='Signed In';
-        if (cleanData.length>0) document.getElementById('syncBtn').disabled=false;
+        if(cleanData.length>0) document.getElementById('syncBtn').disabled=false;
       }
     }
   });
@@ -557,18 +578,18 @@ dz.addEventListener('dragover',function(e){e.preventDefault();});
 dz.addEventListener('drop',function(e){e.preventDefault();handleFile(e.dataTransfer.files[0]);});
 document.getElementById('fileInput').addEventListener('change',function(e){handleFile(e.target.files[0]);});
 
-function resolveLoc(row) {
+function resolveLoc(row){
   var loc=(row['VEHICLELOCATION']||'').toString().trim().toUpperCase();
   if(loc==='AZ'||loc==='TX') return loc;
   return (row['STOCKNO']||'').toString().trim().toUpperCase().endsWith('D')?'TX':'AZ';
 }
 
-function handleFile(file) {
+function handleFile(file){
   if(!file||!file.name.endsWith('.csv')){showS('uploadStatus','Please upload a CSV file.','error');return;}
   showProg(true);
   var reader=new FileReader();
   reader.onload=function(e){
-    try {
+    try{
       var wb=XLSX.read(e.target.result,{type:'binary'});
       var raw=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
       cleanData=raw.map(function(r){var o={};Object.keys(r).forEach(function(k){o[k]=r[k];});o.VEHICLELOCATION=resolveLoc(r);return o;}).filter(function(r){var p=parseFloat(r['SELLINGPRICE']);return !isNaN(p)&&p>0;}).sort(function(a,b){return parseFloat(a['SELLINGPRICE'])-parseFloat(b['SELLINGPRICE']);});
@@ -580,7 +601,7 @@ function handleFile(file) {
       document.getElementById('sTX').textContent=tx;
       document.getElementById('sAvg').textContent='$'+Math.round(avg/1000)+'k';
       document.getElementById('statsRow').style.display='grid';
-      buildPreview(); buildEmail();
+      buildPreview();buildEmail();
       showProg(false);
       showS('uploadStatus','Loaded '+cleanData.length+' units - '+az+' Phoenix (AZ), '+tx+' Dallas (TX).','success');
       document.getElementById('previewCard').style.display='block';
@@ -588,21 +609,21 @@ function handleFile(file) {
       document.getElementById('emailCard').style.display='block';
       if(accessToken) document.getElementById('syncBtn').disabled=false;
       checkCSVStatus();
-    } catch(err){showProg(false);showS('uploadStatus','Error reading file. Make sure it is the correct CSV.','error');}
+    }catch(err){showProg(false);showS('uploadStatus','Error reading file. Make sure it is the correct CSV.','error');}
   };
   reader.readAsBinaryString(file);
 }
 
-function buildPreview() {
-  var tb=document.getElementById('previewBody'); tb.innerHTML='';
+function buildPreview(){
+  var tb=document.getElementById('previewBody');tb.innerHTML='';
   cleanData.forEach(function(r){
-    var loc=r.VEHICLELOCATION; var tr=document.createElement('tr');
+    var loc=r.VEHICLELOCATION;var tr=document.createElement('tr');
     tr.innerHTML='<td>'+(r.STOCKNO||'')+'</td><td style="font-size:9px;color:#777">'+(r.VIN||'')+'</td><td>'+(r.YEAR||'')+'</td><td>'+(r.MAKE||'')+'</td><td>'+(r.MODEL||'')+'</td><td style="font-size:10px">'+(r.TRIM||'')+'</td><td>'+fmtMi(r.ODOMETER)+'</td><td style="font-size:10px">'+(r.ENGINE||'')+'</td><td style="font-size:10px">'+(r.DRIVELINE||'')+'</td><td style="font-size:10px">'+cleanTrans(r.TRANSMISSION||'')+'</td><td style="font-size:10px">'+(r.EXTERIORCOLOR||'')+'</td><td style="font-weight:700;color:#1a6b2a">'+fmtPr(r.SELLINGPRICE)+'</td><td><span class="tag tag-'+loc.toLowerCase()+'">'+loc+'</span></td>';
     tb.appendChild(tr);
   });
 }
 
-function buildEmail() {
+function buildEmail(){
   var subject='Vehicle Buyers - '+TODAY.short+' Inventory List';
   var body='Happy '+TODAY.day+',\n\nHere\'s our refreshed inventory list. Units are located in Phoenix, AZ 85027 and Lewisville, TX 75056.\n\nThe Google Sheets link is below, or I attached a PDF with the list. Use whichever is more convenient!\n\n'+SHEETS_LINK+'\n\nThese vehicles are also available for purchase online at '+WEBSITE+'\n\nThanks,\nKorbin Plotke\n480-646-0135\nWholesale Manager\nVehicle Buyers Auto Auction';
   document.getElementById('emailSubject').value=subject;
@@ -611,28 +632,28 @@ function buildEmail() {
   document.getElementById('bccDisplay').textContent=DEALER_EMAILS.join('; ');
 }
 
-async function syncToSheets() {
+async function syncToSheets(){
   if(!accessToken){triggerAuth();return;}
   var btn=document.getElementById('syncBtn');
-  btn.disabled=true; btn.textContent='Syncing...';
+  btn.disabled=true;btn.textContent='Syncing...';
   showS('sheetsStatus','Uploading fresh inventory...','info');
   var headers=['STOCK #','VIN','YEAR','MAKE','MODEL','TRIM','MILES','ENGINE','DRIVELINE','TRANSMISSION','EXT COLOR','PRICE','LOCATION'];
   var rows=cleanData.map(r=>[r.STOCKNO||'',r.VIN||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',parseInt(r.ODOMETER)||'',r.ENGINE||'',r.DRIVELINE||'',cleanTrans(r.TRANSMISSION||''),r.EXTERIORCOLOR||'',parseFloat(r.SELLINGPRICE)||'',r.VEHICLELOCATION||'']);
-  var values=[headers].concat(rows); var totalRows=values.length;
-  try {
+  var values=[headers].concat(rows);var totalRows=values.length;
+  try{
     var metaRes=await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+SHEET_ID,{headers:{'Authorization':'Bearer '+accessToken}});
     var meta=await metaRes.json();
     var existingSheets=meta.sheets.map(s=>s.properties.title);
     var sheetId;
     if(!existingSheets.includes(SHEET_TAB)){
       var addRes=await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+SHEET_ID+':batchUpdate',{method:'POST',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({requests:[{addSheet:{properties:{title:SHEET_TAB}}}]})});
-      var addData=await addRes.json(); sheetId=addData.replies[0].addSheet.properties.sheetId;
-    } else {
+      var addData=await addRes.json();sheetId=addData.replies[0].addSheet.properties.sheetId;
+    }else{
       sheetId=meta.sheets.find(s=>s.properties.title===SHEET_TAB).properties.sheetId;
       await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+SHEET_ID+'/values/'+encodeURIComponent(SHEET_TAB)+':clear',{method:'POST',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'}});
     }
     await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+SHEET_ID+'/values/'+encodeURIComponent(SHEET_TAB)+'!A1?valueInputOption=RAW',{method:'PUT',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({values:values})});
-    var NC=NUM_COLS; var requests=[];
+    var NC=NUM_COLS;var requests=[];
     requests.push({repeatCell:{range:{sheetId:sheetId,startRowIndex:0,endRowIndex:1000,startColumnIndex:0,endColumnIndex:26},cell:{userEnteredFormat:{}},fields:'userEnteredFormat'}});
     requests.push({repeatCell:{range:{sheetId:sheetId,startRowIndex:0,endRowIndex:1,startColumnIndex:0,endColumnIndex:NC},cell:{userEnteredFormat:{backgroundColor:color('#1A1A2E'),textFormat:{foregroundColor:{red:1,green:1,blue:1},bold:true,fontSize:11},horizontalAlignment:'CENTER',verticalAlignment:'MIDDLE'}},fields:'userEnteredFormat(backgroundColor,textFormat,horizontalAlignment,verticalAlignment)'}});
     for(var i=0;i<cleanData.length;i++){var bg=cleanData[i].VEHICLELOCATION==='AZ'?color('#E8F4FD'):color('#FFF8E8');requests.push({repeatCell:{range:{sheetId:sheetId,startRowIndex:i+1,endRowIndex:i+2,startColumnIndex:0,endColumnIndex:NC},cell:{userEnteredFormat:{backgroundColor:bg,textFormat:{fontSize:9},verticalAlignment:'MIDDLE'}},fields:'userEnteredFormat(backgroundColor,textFormat,verticalAlignment)'}});}
@@ -649,7 +670,7 @@ async function syncToSheets() {
     document.getElementById('sheetsBanner').style.display='flex';
     btn.textContent='Synced!';
     setTimeout(function(){btn.textContent='Sync Inventory to Google Sheet';btn.disabled=false;},4000);
-  } catch(e){showS('sheetsStatus','Network error. Check your connection and try again.','error');btn.textContent='Sync Inventory to Google Sheet';btn.disabled=false;}
+  }catch(e){showS('sheetsStatus','Network error. Check your connection and try again.','error');btn.textContent='Sync Inventory to Google Sheet';btn.disabled=false;}
 }
 
 function openGmail(){var sub=document.getElementById('emailSubject').value;var body=document.getElementById('emailBody').value;window.open('https://mail.google.com/mail/?view=cm&fs=1&bcc='+encodeURIComponent(DEALER_EMAILS.join(','))+'&su='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body),'_blank');document.getElementById('gmailBanner').style.display='flex';}
