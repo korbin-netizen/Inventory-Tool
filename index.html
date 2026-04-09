@@ -26,7 +26,7 @@
   .card-header { background: #2D3561; color: white; padding: 14px 24px; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
   .step { background: #E8B84B; color: #1A1A2E; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; flex-shrink: 0; }
   .card-body { padding: 24px; }
-  .drop-zone { border: 2.5px dashed #2D3561; border-radius: 10px; padding: 40px 24px; text-align: center; background: #f7f9ff; }
+  .drop-zone { border: 2.5px dashed #2D3561; border-radius: 10px; padding: 40px 24px; text-align: center; background: #f7f9ff; cursor: pointer; }
   .drop-zone .icon { font-size: 40px; margin-bottom: 10px; }
   .drop-zone h3 { font-size: 16px; color: #1A1A2E; margin-bottom: 6px; }
   .drop-zone p { font-size: 13px; color: #777; }
@@ -56,8 +56,6 @@
   .btn-sheets { background: #0F9D58; color: white; }
   .btn-sheets:hover:not(:disabled) { background: #0b7a44; }
   .btn-sheets:disabled { background: #aaa; color: #eee; cursor: not-allowed; }
-  .btn-red { background: #c0392b; color: white; }
-  .btn-red:hover { background: #a93226; }
   .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
   .progress { height: 6px; background: #e0e4f0; border-radius: 3px; margin-top: 12px; overflow: hidden; display: none; }
   .progress-bar { height: 100%; background: #E8B84B; border-radius: 3px; transition: width 0.4s; }
@@ -79,11 +77,31 @@
   .tag-tx { background: #FFF8E8; color: #8a6b1a; }
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .form-grid .ef { margin-bottom: 0; }
-  .form-full { grid-column: 1 / -1; }
-  .onboard-preview { background: #f7f9ff; border: 1px solid #e0e4f0; border-radius: 8px; padding: 16px; font-size: 13px; color: #333; white-space: pre-wrap; line-height: 1.6; margin-top: 8px; min-height: 200px; font-family: Arial, sans-serif; }
   .success-banner { background: #f0faf4; border: 1px solid #a8ddb9; border-radius: 10px; padding: 20px 24px; display: none; margin-top: 16px; }
   .success-banner h3 { color: #1a6b2a; font-size: 15px; margin-bottom: 8px; }
   .success-banner p { color: #2a7a3a; font-size: 13px; }
+  .csv-warning { background: #fff8e8; border: 1px solid #f0c040; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #7a5a00; margin-bottom: 12px; display: none; }
+  .rte-label { font-size: 12px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+  .rte-toolbar { display: flex; flex-wrap: wrap; gap: 3px; padding: 8px 10px; background: #f7f9ff; border: 1px solid #dde0ea; border-bottom: none; border-radius: 6px 6px 0 0; align-items: center; }
+  .rte-btn { padding: 4px 8px; border: 1px solid #dde0ea; border-radius: 4px; background: white; cursor: pointer; font-size: 12px; font-family: Arial, sans-serif; color: #333; transition: all 0.1s; min-width: 28px; text-align: center; line-height: 1.4; }
+  .rte-btn:hover { background: #e8ecf8; border-color: #2D3561; }
+  .rte-sep { width: 1px; height: 22px; background: #dde0ea; margin: 0 3px; }
+  .rte-select { padding: 3px 5px; border: 1px solid #dde0ea; border-radius: 4px; background: white; font-size: 12px; color: #333; cursor: pointer; height: 26px; }
+  .rte-color-wrap { display: flex; align-items: center; gap: 3px; }
+  .rte-color-wrap span { font-size: 11px; color: #777; }
+  .rte-color { width: 26px; height: 26px; border: 1px solid #dde0ea; border-radius: 4px; cursor: pointer; padding: 2px; }
+  .rte-body { border: 1px solid #dde0ea; border-radius: 0 0 6px 6px; min-height: 260px; max-height: 400px; overflow-y: auto; padding: 14px; font-size: 13px; font-family: Arial, sans-serif; color: #333; line-height: 1.7; outline: none; background: white; }
+  .rte-body:focus { border-color: #2D3561; }
+  .sig-preview { border-top: 1px solid #e0e0e0; margin-top: 16px; padding-top: 14px; font-family: Arial, sans-serif; }
+  .sig-dashes { color: #666; font-size: 13px; margin-bottom: 8px; }
+  .sig-name-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .sig-name { font-weight: 700; font-size: 14px; color: #111; }
+  .sig-pipe { color: #aaa; font-size: 14px; }
+  .sig-title { font-size: 14px; color: #555; }
+  .sig-company { font-size: 12px; color: #888; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+  .sig-line { border: none; border-top: 1px solid #ddd; margin: 8px 0; }
+  .sig-contact { font-size: 13px; color: #555; display: flex; align-items: center; gap: 10px; }
+  .sig-contact a { color: #111; text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -95,8 +113,8 @@
   <div class="date-badge" id="dateBadge"></div>
 </div>
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('inventory')">Inventory Blast</div>
-  <div class="tab" onclick="switchTab('onboard')">Onboard Dealer</div>
+  <div class="tab active" onclick="switchTab('inventory', this)">Inventory Blast</div>
+  <div class="tab" onclick="switchTab('onboard', this)">Onboard Dealer</div>
 </div>
 
 <!-- INVENTORY TAB -->
@@ -181,6 +199,9 @@
   <div class="card">
     <div class="card-header"><span class="step">1</span> New Dealer Info</div>
     <div class="card-body">
+      <div class="csv-warning" id="csvWarning">
+        ⚠️ No inventory CSV loaded yet today. Drop a CSV in the Inventory Blast tab first to attach a fresh inventory list to this email.
+      </div>
       <div class="form-grid">
         <div class="ef">
           <label>Dealership Name *</label>
@@ -188,7 +209,7 @@
         </div>
         <div class="ef">
           <label>State *</label>
-          <input type="text" id="ob-state" placeholder="e.g. AZ" maxlength="2" oninput="updatePreview()">
+          <input type="text" id="ob-state" placeholder="e.g. AZ" maxlength="2" style="text-transform:uppercase" oninput="updatePreview()">
         </div>
         <div class="ef">
           <label>Contact Name *</label>
@@ -200,11 +221,11 @@
         </div>
         <div class="ef">
           <label>Phone Number</label>
-          <input type="text" id="ob-phone" placeholder="e.g. 555-123-4567" oninput="updatePreview()">
+          <input type="text" id="ob-phone" placeholder="e.g. 555-123-4567">
         </div>
         <div class="ef">
           <label>How did you find them?</label>
-          <select id="ob-source" oninput="updatePreview()">
+          <select id="ob-source">
             <option value="Cold Call">Cold Call</option>
             <option value="Facebook">Facebook</option>
             <option value="Email Blast">Email Blast</option>
@@ -229,14 +250,56 @@
   <div class="card">
     <div class="card-header"><span class="step">2</span> Email Preview</div>
     <div class="card-body">
-      <p style="font-size:12px;color:#777;margin-bottom:10px">This is what will be sent. Edit the email body below if needed.</p>
-      <div class="ef">
-        <label>Email Subject</label>
+      <div class="ef" style="margin-bottom:16px">
+        <label>Subject</label>
         <input type="text" id="ob-subject" value="Vehicle Buyers Auto Auction — Welcome!">
       </div>
-      <div class="ef">
-        <label>Email Body</label>
-        <textarea id="ob-body" style="min-height:280px;" oninput=""></textarea>
+      <label class="rte-label">Email Body</label>
+      <div class="rte-toolbar">
+        <select class="rte-select" onchange="execCmd('fontSize', this.value); this.value='3'" title="Font Size">
+          <option value="3">Size</option>
+          <option value="1">Small</option>
+          <option value="3">Normal</option>
+          <option value="4">Large</option>
+          <option value="5">X-Large</option>
+        </select>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="execCmd('bold')" title="Bold"><b>B</b></button>
+        <button class="rte-btn" onclick="execCmd('italic')" title="Italic"><i>I</i></button>
+        <button class="rte-btn" onclick="execCmd('underline')" title="Underline"><u>U</u></button>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="execCmd('insertUnorderedList')" title="Bullet List">&#8226; List</button>
+        <button class="rte-btn" onclick="execCmd('insertOrderedList')" title="Numbered List">1. List</button>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="execCmd('justifyLeft')" title="Align Left">&#8676;</button>
+        <button class="rte-btn" onclick="execCmd('justifyCenter')" title="Center">&#8677;</button>
+        <div class="rte-sep"></div>
+        <div class="rte-color-wrap">
+          <span>Text</span>
+          <input type="color" class="rte-color" value="#000000" onchange="execCmd('foreColor', this.value)" title="Text Color">
+        </div>
+        <div class="rte-color-wrap">
+          <span>Highlight</span>
+          <input type="color" class="rte-color" value="#FFFF00" onchange="execCmd('hiliteColor', this.value)" title="Highlight Color">
+        </div>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="execCmd('removeFormat')" title="Clear Formatting">Clear</button>
+        <button class="rte-btn" onclick="insertLink()" title="Insert Link">Link</button>
+      </div>
+      <div class="rte-body" id="rteBody" contenteditable="true"></div>
+      <div class="sig-preview">
+        <div class="sig-dashes">--</div>
+        <div class="sig-name-row">
+          <span class="sig-name">Korbin Plotke</span>
+          <span class="sig-pipe">|</span>
+          <span class="sig-title">Wholesale Manager</span>
+        </div>
+        <div class="sig-company">Vehicle Buyers Auto Auction</div>
+        <hr class="sig-line">
+        <div class="sig-contact">
+          Cell: 480-646-0135 &nbsp;|&nbsp;
+          <a href="https://www.vehiclebuyersautoauction.com" target="_blank">vehiclebuyersautoauction.com</a>
+        </div>
       </div>
     </div>
   </div>
@@ -249,9 +312,10 @@
         <span class="signin-lbl" id="ob-signinLbl">Not signed in</span>
       </div>
       <hr class="div">
-      <p style="font-size:13px;color:#555;margin-bottom:16px">This will send the welcome email to the dealer AND add them to your Dealer Network Google Sheet simultaneously.</p>
+      <p style="font-size:13px;color:#555;margin-bottom:8px">Sends the welcome email with your signature + fresh inventory PDF attached (if CSV loaded). Also adds dealer to your Network sheet.</p>
+      <div id="ob-pdf-status" style="font-size:12px;color:#777;margin-bottom:12px"></div>
       <div class="btn-row">
-        <button class="btn btn-grn" onclick="onboardDealer()" id="ob-sendBtn">Send Email + Add to Sheet</button>
+        <button class="btn btn-grn" onclick="onboardDealer()">Send Email + Add to Sheet</button>
         <button class="btn btn-gold" onclick="openGmailOnboard()">Open in Gmail Instead</button>
       </div>
       <div class="sbar" id="ob-status"></div>
@@ -271,8 +335,10 @@ var DEALER_SHEET_ID = '1CoVTfzo5R_XPqVawdlWsT5zlN6us90no9RP5pzYCKbY';
 var SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/gmail.send';
 var SHEETS_LINK = 'https://docs.google.com/spreadsheets/d/1SZrZV71WAAJ7jHpr_UlieZzCgyDV-GS_dJpFSk-rxcg/edit?usp=sharing';
 var WEBSITE = 'www.vehiclebuyersautoauction.com';
-const DEALER_EMAILS = ["vincent.martincavage@car-mart.com","dportillo@orielly.com","nfoster@driveplanet.com","guyg@lambauto.com","pete@lakepowellford.com","droller@yatesbuickgmc.com","bradf@bergegroup.com","kevindewey@santanford.com","carlos@universalmitsubishi.com","garen@subaruofglendale.net","cmonroy0126@gmail.com","ihartman@hgreg.com","rcastillo@epicchevrolet.com","BMcQueen@penskeautomotive.com","amanypenny@starfordinc.com","Jeff@hondaofpasadena.com","jlee@metrohonda.com","jharmond@airportmarinahonda.com","Harry@simivalleycdjr.com","eli@dcmitsu.com","Curtisking94571@gmail.com","sfields@mossy.com","OsMendoza@mossy.com","amorfin@bakersfieldhyundai.com","cmcandrew@niello.com","mmaledon@elwaydealers.net","djordan@castlerockautoplex.com","bdanner@freewayfordonline.com","jbeard@elwaydealers.net","Daltonplattner@plattnerautomotivegroup.com","kevinejohns@gmail.com","JasonHarrison@lithia.com","Bzukas@mariontoyota.com","bnikolov@motorwerks.com","Kerry.boettcher@kunes.com","Kelly@steveschmitt.com","alex@marshallchevrolet.com","Steve.medina@rohrmanauto.com","levi.laws@rohrmanauto.com","tgriffin@victorykc.com","mclark@foxmotors.com","dchung@lssubaru.com","tyler.yates@heartlandcdjr.com","lucas@heartlandchevy.com","mdavis@justbetterauto.com","Adamg@bobmariano.com","stevenfrancoeur@merchantsauto.com","Pierre@karmawestfield.com","MMarsh@vtaig.com","ccooke@qualitydeal.com","jonathanb@freemanauto.com","Jkilway@casaautogroup.com","mmccarty@chalmersford.com","astrebe@chalmersford.com","1mesquitesales@gmail.com","awatson@gaudinford.com","devin@r21motorsports.com","rmurray@fivestaronline.net","price@fivestaronline.net","jordan.baker@fivestaronline.net","spankow@basilcars.com","Nick.landman17@gmail.com","Jewls@legendmotors.com","Joshb@chevroletoftroy.com","jfulep@serpentinichevy.com","rvirgen@spartanburghonda.com","tswanger@verneide.com","German.sanchez@dickpoe.com","cpolk@gpolk.com","Richard.andrews@glasscockchevrolet.com","andrew_osterhoudt@jenkinscars.com","Jason.leney@holidayautogroup.com","rfugate@brinsonautogroup.com","tony@youdriveauto.com","scummings@gayfamilyauto.com","zsanders@foundationauto.com","ryan@sames.net","rcarrera@sames.net","bwilkins@teamgranger.com","jfigueroa@metronissandallas.com","paulsharp@fredhaasnissan.com","brentwilliams@covertauto.com","jessegenovese@covertauto.com","tylerishak@covertauto.com","justingreene@brownfieldautomotive.com","ktcoles@msn.com","nickjex@heydoug.net","parker.w@heritageeprice.com","bheffron@kengarff.com","blain@wattsautomotive.com","wardf@chevroletofeverett.com","rmoe@chevroletofeverett.com","Dmcmiller@iahyundai.com","mattmartin@gabrieljordan.com","chet.crain@landerscorp.com","jsims@seguinchevrolet.com","cbolger@hessertchevy.com","Slowrider011389@gmail.com","tszymanski@donlarson.com","ffitzmaurice@bobjohnsonauto.com","dsukhai23@gmail.com","rdiaz@myalexandertoyota.com","Thompson.kevin93@gmail.com","Jckksteiner@gmail.com","jeremy.nunes@duprattford.com","Jeremydchick@gmail.com","josh@meadowsford.com","atyler@walser.com","lterry@gpolk.com","rpage@steadauto.com","jsminear@gmail.com","aron@meadowsautogroup.com","Shane.varner@kcpremierauto.com","roberto@cdjrelmhurst.com","evirgen@cdjrelmhurst.com"];
 var cleanData = [], accessToken = null, onboardAccessToken = null;
+
+const DEALER_EMAILS = ["vincent.martincavage@car-mart.com","dportillo@orielly.com","nfoster@driveplanet.com","guyg@lambauto.com","pete@lakepowellford.com","droller@yatesbuickgmc.com","bradf@bergegroup.com","kevindewey@santanford.com","carlos@universalmitsubishi.com","garen@subaruofglendale.net","cmonroy0126@gmail.com","ihartman@hgreg.com","rcastillo@epicchevrolet.com","BMcQueen@penskeautomotive.com","amanypenny@starfordinc.com","Jeff@hondaofpasadena.com","jlee@metrohonda.com","jharmond@airportmarinahonda.com","Harry@simivalleycdjr.com","eli@dcmitsu.com","Curtisking94571@gmail.com","sfields@mossy.com","OsMendoza@mossy.com","amorfin@bakersfieldhyundai.com","cmcandrew@niello.com","mmaledon@elwaydealers.net","djordan@castlerockautoplex.com","bdanner@freewayfordonline.com","jbeard@elwaydealers.net","Daltonplattner@plattnerautomotivegroup.com","kevinejohns@gmail.com","JasonHarrison@lithia.com","Bzukas@mariontoyota.com","bnikolov@motorwerks.com","Kerry.boettcher@kunes.com","Kelly@steveschmitt.com","alex@marshallchevrolet.com","Steve.medina@rohrmanauto.com","levi.laws@rohrmanauto.com","tgriffin@victorykc.com","mclark@foxmotors.com","dchung@lssubaru.com","tyler.yates@heartlandcdjr.com","lucas@heartlandchevy.com","mdavis@justbetterauto.com","Adamg@bobmariano.com","stevenfrancoeur@merchantsauto.com","Pierre@karmawestfield.com","MMarsh@vtaig.com","ccooke@qualitydeal.com","jonathanb@freemanauto.com","Jkilway@casaautogroup.com","mmccarty@chalmersford.com","astrebe@chalmersford.com","1mesquitesales@gmail.com","awatson@gaudinford.com","devin@r21motorsports.com","rmurray@fivestaronline.net","price@fivestaronline.net","jordan.baker@fivestaronline.net","spankow@basilcars.com","Nick.landman17@gmail.com","Jewls@legendmotors.com","Joshb@chevroletoftroy.com","jfulep@serpentinichevy.com","rvirgen@spartanburghonda.com","tswanger@verneide.com","German.sanchez@dickpoe.com","cpolk@gpolk.com","Richard.andrews@glasscockchevrolet.com","andrew_osterhoudt@jenkinscars.com","Jason.leney@holidayautogroup.com","rfugate@brinsonautogroup.com","tony@youdriveauto.com","scummings@gayfamilyauto.com","zsanders@foundationauto.com","ryan@sames.net","rcarrera@sames.net","bwilkins@teamgranger.com","jfigueroa@metronissandallas.com","paulsharp@fredhaasnissan.com","brentwilliams@covertauto.com","jessegenovese@covertauto.com","tylerishak@covertauto.com","justingreene@brownfieldautomotive.com","ktcoles@msn.com","nickjex@heydoug.net","parker.w@heritageeprice.com","bheffron@kengarff.com","blain@wattsautomotive.com","wardf@chevroletofeverett.com","rmoe@chevroletofeverett.com","Dmcmiller@iahyundai.com","mattmartin@gabrieljordan.com","chet.crain@landerscorp.com","jsims@seguinchevrolet.com","cbolger@hessertchevy.com","Slowrider011389@gmail.com","tszymanski@donlarson.com","ffitzmaurice@bobjohnsonauto.com","dsukhai23@gmail.com","rdiaz@myalexandertoyota.com","Thompson.kevin93@gmail.com","Jckksteiner@gmail.com","jeremy.nunes@duprattford.com","Jeremydchick@gmail.com","josh@meadowsford.com","atyler@walser.com","lterry@gpolk.com","rpage@steadauto.com","jsminear@gmail.com","aron@meadowsautogroup.com","Shane.varner@kcpremierauto.com","roberto@cdjrelmhurst.com","evirgen@cdjrelmhurst.com"];
+
 var d = new Date();
 var TODAY = {
   day: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()],
@@ -283,54 +349,82 @@ var SHEET_TAB = TODAY.short;
 var NUM_COLS = 13;
 document.getElementById('dateBadge').textContent = TODAY.long;
 
-function switchTab(tab) {
+function switchTab(tab, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  event.target.classList.add('active');
+  el.classList.add('active');
   document.getElementById('tab-' + tab).classList.add('active');
+  if (tab === 'onboard') { checkCSVStatus(); updatePreview(); }
 }
 
-// ─── ONBOARD DEALER ───────────────────────────────────────────────
-function updatePreview() {
-  var contact = document.getElementById('ob-contact').value || '[Contact Name]';
-  var dealership = document.getElementById('ob-dealership').value || '[Dealership]';
-  var username = document.getElementById('ob-username').value || '[username]';
-  var password = document.getElementById('ob-password').value || '[password]';
-  var firstName = contact.split(' ')[0] || contact;
+function execCmd(cmd, val) {
+  document.getElementById('rteBody').focus();
+  document.execCommand(cmd, false, val || null);
+}
 
-  var body = firstName + ',\n\n';
-  body += "Here's our refreshed inventory list. Units are located in Phoenix, AZ 85027 and Lewisville, TX 75056.\n\n";
-  body += "The Google Sheets link is below, or I can attach a PDF with the list. Use whichever is more convenient!\n\n";
-  body += SHEETS_LINK + '\n\n';
-  body += 'These vehicles are also available for purchase online at ' + WEBSITE + '\n\n';
+function insertLink() {
+  var url = prompt('Enter URL:', 'https://');
+  if (url) { document.getElementById('rteBody').focus(); document.execCommand('createLink', false, url); }
+}
 
-  if (username && username !== '[username]') {
-    body += 'Your login:\n';
-    body += 'Username: ' + username + '\n';
-    body += 'Password: ' + password + '\n\n';
+function checkCSVStatus() {
+  var warning = document.getElementById('csvWarning');
+  var pdfStatus = document.getElementById('ob-pdf-status');
+  if (cleanData.length > 0) {
+    warning.style.display = 'none';
+    pdfStatus.innerHTML = '✅ Fresh inventory PDF ready to attach (' + cleanData.length + ' units from today\'s CSV)';
+    pdfStatus.style.color = '#1a6b2a';
+  } else {
+    warning.style.display = 'block';
+    pdfStatus.innerHTML = '⚠️ No PDF will be attached — load a CSV in the Inventory Blast tab first';
+    pdfStatus.style.color = '#7a5a00';
   }
-
-  body += "We represent all vehicles the same so you don't have to second-guess what you need to do for recon. Recon steps we handle (if needed on the unit): PDR, Windshields, tires (if they're dry rotted, nail in one, or under 5/32nds), bodywork, and electronic needs. We guarantee motors, transmissions, frame, fire and flood damage.\n\n";
-  body += "What we don't cover: Brakes, and fluids.\n\n";
-  body += "We will send vehicle and title, I just expect payment within 7-10 days.\n\n";
-  body += "I'd be happy to answer any questions you have. Look forward to hearing from you.\n\n";
-  body += "--\nKorbin Plotke | Wholesale Manager\nVEHICLE BUYERS AUTO AUCTION\nCell: 480-646-0135 | vehiclebuyersautoauction.com";
-
-  document.getElementById('ob-body').value = body;
 }
 
-// Initialize preview on load
+function getSignatureHTML() {
+  return '<div style="font-family:Arial,sans-serif;margin-top:20px;padding-top:14px;border-top:1px solid #e0e0e0;">' +
+    '<p style="color:#666;font-size:13px;margin-bottom:8px;">--</p>' +
+    '<p style="margin-bottom:4px;"><strong style="font-size:14px;color:#111;">Korbin Plotke</strong>' +
+    '<span style="color:#aaa;margin:0 8px;font-size:14px;">|</span>' +
+    '<span style="font-size:14px;color:#555;">Wholesale Manager</span></p>' +
+    '<p style="font-size:12px;color:#888;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin-bottom:8px;">Vehicle Buyers Auto Auction</p>' +
+    '<hr style="border:none;border-top:1px solid #ddd;margin:8px 0;">' +
+    '<p style="font-size:13px;color:#555;">Cell: 480-646-0135 &nbsp;|&nbsp;' +
+    '<a href="https://www.vehiclebuyersautoauction.com" style="color:#111;text-decoration:underline;">vehiclebuyersautoauction.com</a></p>' +
+    '</div>';
+}
+
+function updatePreview() {
+  var contact = document.getElementById('ob-contact').value || '';
+  var username = document.getElementById('ob-username').value || '';
+  var password = document.getElementById('ob-password').value || '';
+  var firstName = contact.split(' ')[0] || 'there';
+  var html = '<p>' + firstName + ',</p><br>';
+  html += '<p>Here\'s our refreshed inventory list. Units are located in Phoenix, AZ 85027 and Lewisville, TX 75056.</p><br>';
+  html += '<p>The Google Sheets link is below, or I can attach a PDF with the list. Use whichever is more convenient!</p><br>';
+  html += '<p><a href="' + SHEETS_LINK + '">' + SHEETS_LINK + '</a></p><br>';
+  html += '<p>These vehicles are also available for purchase online at <a href="https://' + WEBSITE + '">' + WEBSITE + '</a></p><br>';
+  if (username) {
+    html += '<p><strong>Your login:</strong><br>Username: ' + username + '<br>Password: ' + (password || '') + '</p><br>';
+  }
+  html += '<p>We represent all vehicles the same so you don\'t have to second-guess what you need to do for recon. Recon steps we handle (if needed on the unit): PDR, Windshields, tires (if they\'re dry rotted, nail in one, or under 5/32nds), bodywork, and electronic needs. We guarantee motors, transmissions, frame, fire and flood damage.</p><br>';
+  html += '<p>What we don\'t cover: Brakes, and fluids.</p><br>';
+  html += '<p>We will send vehicle and title, I just expect payment within 7-10 days.</p><br>';
+  html += '<p>I\'d be happy to answer any questions you have. Look forward to hearing from you.</p>';
+  document.getElementById('rteBody').innerHTML = html;
+}
+
 updatePreview();
+checkCSVStatus();
 
 function triggerAuthOnboard() {
-  if (!window.google) { alert('Google Sign-In not loaded yet. Please wait and try again.'); return; }
+  if (!window.google) { alert('Google Sign-In not loaded yet. Please wait.'); return; }
   var client = google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID,
-    scope: SCOPES,
+    client_id: CLIENT_ID, scope: SCOPES,
     callback: function(resp) {
       if (resp.access_token) {
         onboardAccessToken = resp.access_token;
-        accessToken = resp.access_token; // share token for both tabs
+        accessToken = resp.access_token;
         document.getElementById('ob-signinLbl').textContent = 'Signed in — ready to send';
         document.getElementById('ob-signinLbl').className = 'signin-lbl ok';
         document.getElementById('ob-signInBtn').textContent = 'Signed In';
@@ -352,100 +446,82 @@ async function onboardDealer() {
   var phone = document.getElementById('ob-phone').value.trim();
   var source = document.getElementById('ob-source').value;
   var subject = document.getElementById('ob-subject').value.trim();
-  var body = document.getElementById('ob-body').value.trim();
-
-  if (!dealership || !contact || !email) {
-    showS('ob-status', 'Please fill in Dealership, Contact Name, and Email.', 'error');
-    return;
-  }
-  if (!onboardAccessToken) {
-    showS('ob-status', 'Please sign in with Google first.', 'error');
-    return;
-  }
-
-  showS('ob-status', 'Sending email and adding to sheet...', 'info');
-
+  var bodyHTML = document.getElementById('rteBody').innerHTML + getSignatureHTML();
+  if (!dealership || !contact || !email) { showS('ob-status','Please fill in Dealership, Contact Name, and Email.','error'); return; }
+  if (!onboardAccessToken) { showS('ob-status','Please sign in with Google first.','error'); return; }
+  showS('ob-status','Sending email and adding to sheet...','info');
   try {
-    // 1. Send email via Gmail API
-    var emailContent = 'To: ' + email + '\r\n' +
-      'Subject: ' + subject + '\r\n' +
-      'Content-Type: text/plain; charset=utf-8\r\n\r\n' +
-      body;
-    var encoded = btoa(unescape(encodeURIComponent(emailContent)))
-      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-
-    var gmailRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + onboardAccessToken,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ raw: encoded })
-    });
-
-    if (!gmailRes.ok) {
-      var err = await gmailRes.json();
-      throw new Error('Gmail error: ' + JSON.stringify(err));
+    var boundary = 'VehicleBuyers_' + Date.now();
+    var emailLines = [];
+    emailLines.push('To: ' + email);
+    emailLines.push('Subject: ' + subject);
+    emailLines.push('MIME-Version: 1.0');
+    if (cleanData.length > 0) {
+      emailLines.push('Content-Type: multipart/mixed; boundary="' + boundary + '"');
+      emailLines.push('');
+      emailLines.push('--' + boundary);
+      emailLines.push('Content-Type: text/html; charset=utf-8');
+      emailLines.push('');
+      emailLines.push(bodyHTML);
+      emailLines.push('');
+      emailLines.push('--' + boundary);
+      emailLines.push('Content-Type: application/pdf');
+      emailLines.push('Content-Transfer-Encoding: base64');
+      emailLines.push('Content-Disposition: attachment; filename="VehicleBuyers_Inventory_' + TODAY.short.replace('/','_') + '.pdf"');
+      emailLines.push('');
+      emailLines.push(generatePDFBase64());
+      emailLines.push('--' + boundary + '--');
+    } else {
+      emailLines.push('Content-Type: text/html; charset=utf-8');
+      emailLines.push('');
+      emailLines.push(bodyHTML);
     }
-
-    // 2. Add to Dealer Network Google Sheet (Network tab)
-    var sheetRes = await fetch(
-      'https://sheets.googleapis.com/v4/spreadsheets/' + DEALER_SHEET_ID + '/values/Network!A:F:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS',
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + onboardAccessToken,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          values: [[dealership, state, contact, email, phone || source, 'Signed up']]
-        })
-      }
-    );
-
-    if (!sheetRes.ok) {
-      var err2 = await sheetRes.json();
-      throw new Error('Sheets error: ' + JSON.stringify(err2));
-    }
-
-    // Success
-    showS('ob-status', '', '');
-    document.getElementById('ob-success').style.display = 'block';
-    document.getElementById('ob-success-msg').textContent =
-      'Welcome email sent to ' + contact + ' at ' + email + '. ' + dealership + ' added to your Dealer Network sheet.';
-
-    // Clear form
-    setTimeout(function() {
-      document.getElementById('ob-dealership').value = '';
-      document.getElementById('ob-state').value = '';
-      document.getElementById('ob-contact').value = '';
-      document.getElementById('ob-email').value = '';
-      document.getElementById('ob-phone').value = '';
-      document.getElementById('ob-success').style.display = 'none';
+    var rawEmail = emailLines.join('\r\n');
+    var encoded = btoa(unescape(encodeURIComponent(rawEmail))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    var gmailRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{method:'POST',headers:{'Authorization':'Bearer '+onboardAccessToken,'Content-Type':'application/json'},body:JSON.stringify({raw:encoded})});
+    if (!gmailRes.ok) { var err=await gmailRes.json(); throw new Error('Gmail: '+(err.error&&err.error.message?err.error.message:JSON.stringify(err))); }
+    var sheetRes = await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+DEALER_SHEET_ID+'/values/Network!A:F:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS',{method:'POST',headers:{'Authorization':'Bearer '+onboardAccessToken,'Content-Type':'application/json'},body:JSON.stringify({values:[[dealership,state,contact,email,phone||source,'Signed up']]})});
+    if (!sheetRes.ok) { var err2=await sheetRes.json(); throw new Error('Sheet: '+(err2.error&&err2.error.message?err2.error.message:JSON.stringify(err2))); }
+    showS('ob-status','','');
+    document.getElementById('ob-success').style.display='block';
+    document.getElementById('ob-success-msg').textContent='Welcome email sent to '+contact+' at '+email+(cleanData.length>0?' with today\'s inventory PDF attached.':'.')+' '+dealership+' added to your Dealer Network sheet.';
+    setTimeout(function(){
+      ['ob-dealership','ob-state','ob-contact','ob-email','ob-phone','ob-username','ob-password'].forEach(id=>document.getElementById(id).value='');
+      document.getElementById('ob-success').style.display='none';
       updatePreview();
-    }, 5000);
+    },6000);
+  } catch(e) { showS('ob-status','Error: '+e.toString(),'error'); }
+}
 
-  } catch(e) {
-    showS('ob-status', 'Error: ' + e.toString(), 'error');
-  }
+function generatePDFBase64() {
+  try {
+    var doc=new window.jspdf.jsPDF({orientation:'landscape',unit:'pt',format:'letter'});
+    var w=doc.internal.pageSize.width;
+    var az=cleanData.filter(r=>r.VEHICLELOCATION==='AZ').length;
+    var tx=cleanData.filter(r=>r.VEHICLELOCATION==='TX').length;
+    doc.setFillColor(26,26,46); doc.rect(0,0,w,36,'F');
+    doc.setTextColor(255,255,255); doc.setFontSize(13); doc.setFont('helvetica','bold');
+    doc.text('VEHICLE BUYERS - WHOLESALE INVENTORY - '+TODAY.long.toUpperCase(),w/2,22,{align:'center'});
+    doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(232,184,75);
+    doc.text(cleanData.length+' Units  -  '+az+' Phoenix (AZ)  -  '+tx+' Dallas (TX)  -  Nationwide Shipping',w/2,31,{align:'center'});
+    doc.autoTable({startY:42,head:[['STOCK #','VIN','YEAR','MAKE','MODEL','TRIM','MILES','ENGINE','DRIVELINE','TRANSMISSION','COLOR','PRICE','LOC']],body:cleanData.map(r=>[r.STOCKNO||'',r.VIN||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',fmtMi(r.ODOMETER),r.ENGINE||'',r.DRIVELINE||'',cleanTrans(r.TRANSMISSION||''),r.EXTERIORCOLOR||'',fmtPr(r.SELLINGPRICE),r.VEHICLELOCATION||'']),styles:{fontSize:7,cellPadding:3},headStyles:{fillColor:[45,53,97],textColor:255,fontStyle:'bold'},columnStyles:{0:{cellWidth:52},1:{cellWidth:82},2:{cellWidth:28},3:{cellWidth:52},4:{cellWidth:58},5:{cellWidth:90},6:{cellWidth:42},7:{cellWidth:68},8:{cellWidth:58},9:{cellWidth:90},10:{cellWidth:70},11:{cellWidth:44,fontStyle:'bold',textColor:[26,107,42]},12:{cellWidth:28}},didParseCell:function(data){if(data.section==='body'){var loc=cleanData[data.row.index]&&cleanData[data.row.index].VEHICLELOCATION;data.cell.styles.fillColor=loc==='AZ'?[232,244,253]:[255,248,232];}},margin:{left:20,right:20}});
+    return btoa(doc.output());
+  } catch(e) { console.error('PDF error:',e); return ''; }
 }
 
 function openGmailOnboard() {
-  var email = document.getElementById('ob-email').value.trim();
-  var subject = document.getElementById('ob-subject').value.trim();
-  var body = document.getElementById('ob-body').value.trim();
-  if (!email) { showS('ob-status', 'Please enter a dealer email address first.', 'error'); return; }
-  window.open('https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(email) + '&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body), '_blank');
+  var email=document.getElementById('ob-email').value.trim();
+  var subject=document.getElementById('ob-subject').value.trim();
+  var body=document.getElementById('rteBody').innerText;
+  if (!email) { showS('ob-status','Please enter a dealer email address first.','error'); return; }
+  window.open('https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(email)+'&su='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body),'_blank');
 }
 
-// ─── INVENTORY TOOL ───────────────────────────────────────────────
 function color(h){return {red:parseInt(h.slice(1,3),16)/255,green:parseInt(h.slice(3,5),16)/255,blue:parseInt(h.slice(5,7),16)/255};}
 function fmtMi(v){ var n=parseInt(v); return isNaN(n)?'':n.toLocaleString(); }
 function fmtPr(v){ var n=parseFloat(v); return isNaN(n)?'':'$'+Math.round(n).toLocaleString(); }
 function cleanTrans(t){
-  if(!t) return '';
-  t = t.trim();
-  var u = t.toUpperCase();
+  if(!t) return ''; t=t.trim(); var u=t.toUpperCase();
   if(u.indexOf('CVT')>-1||u.indexOf('CONTINUOUSLY VARIABLE')>-1) return 'CVT';
   if(u.indexOf('DUAL CLUTCH')>-1){var m=u.match(/(\d+)-SPEED/);return (m?m[1]+'-Speed ':'')+'Dual Clutch';}
   if(u.indexOf('AUTO-SHIFT')>-1||u.indexOf('AUTOSHIFT')>-1) return 'Auto-Shift Manual';
@@ -455,122 +531,115 @@ function cleanTrans(t){
   if(u.indexOf('MANUAL')>-1) return 'Manual';
   return t;
 }
+
 function triggerAuth() {
-  if (!window.google) { alert('Google Sign-In not loaded yet. Please wait and try again.'); return; }
+  if (!window.google) { alert('Google Sign-In not loaded yet. Please wait.'); return; }
   var client = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID, scope: SCOPES,
     callback: function(resp) {
       if (resp.access_token) {
-        accessToken = resp.access_token;
-        onboardAccessToken = resp.access_token;
-        document.getElementById('signinLbl').textContent = 'Signed in - ready to sync';
-        document.getElementById('signinLbl').className = 'signin-lbl ok';
-        document.getElementById('signInBtn').textContent = 'Signed In';
-        document.getElementById('ob-signinLbl').textContent = 'Signed in — ready to send';
-        document.getElementById('ob-signinLbl').className = 'signin-lbl ok';
-        document.getElementById('ob-signInBtn').textContent = 'Signed In';
-        if (cleanData.length > 0) document.getElementById('syncBtn').disabled = false;
+        accessToken = resp.access_token; onboardAccessToken = resp.access_token;
+        document.getElementById('signinLbl').textContent='Signed in - ready to sync';
+        document.getElementById('signinLbl').className='signin-lbl ok';
+        document.getElementById('signInBtn').textContent='Signed In';
+        document.getElementById('ob-signinLbl').textContent='Signed in — ready to send';
+        document.getElementById('ob-signinLbl').className='signin-lbl ok';
+        document.getElementById('ob-signInBtn').textContent='Signed In';
+        if (cleanData.length>0) document.getElementById('syncBtn').disabled=false;
       }
     }
   });
   client.requestAccessToken();
 }
-var dz = document.getElementById('dropZone');
-dz.addEventListener('dragover', function(e){ e.preventDefault(); });
-dz.addEventListener('drop', function(e){ e.preventDefault(); handleFile(e.dataTransfer.files[0]); });
-document.getElementById('fileInput').addEventListener('change', function(e){ handleFile(e.target.files[0]); });
+
+var dz=document.getElementById('dropZone');
+dz.addEventListener('dragover',function(e){e.preventDefault();});
+dz.addEventListener('drop',function(e){e.preventDefault();handleFile(e.dataTransfer.files[0]);});
+document.getElementById('fileInput').addEventListener('change',function(e){handleFile(e.target.files[0]);});
+
 function resolveLoc(row) {
-  var loc = (row['VEHICLELOCATION']||'').toString().trim().toUpperCase();
-  if (loc==='AZ'||loc==='TX') return loc;
-  return (row['STOCKNO']||'').toString().trim().toUpperCase().endsWith('D') ? 'TX' : 'AZ';
+  var loc=(row['VEHICLELOCATION']||'').toString().trim().toUpperCase();
+  if(loc==='AZ'||loc==='TX') return loc;
+  return (row['STOCKNO']||'').toString().trim().toUpperCase().endsWith('D')?'TX':'AZ';
 }
+
 function handleFile(file) {
-  if (!file||!file.name.endsWith('.csv')){ showS('uploadStatus','Please upload a CSV file.','error'); return; }
+  if(!file||!file.name.endsWith('.csv')){showS('uploadStatus','Please upload a CSV file.','error');return;}
   showProg(true);
-  var reader = new FileReader();
-  reader.onload = function(e) {
+  var reader=new FileReader();
+  reader.onload=function(e){
     try {
-      var wb = XLSX.read(e.target.result,{type:'binary'});
-      var raw = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
-      cleanData = raw
-        .map(function(r){ var o={}; Object.keys(r).forEach(function(k){o[k]=r[k];}); o.VEHICLELOCATION=resolveLoc(r); return o; })
-        .filter(function(r){ var p=parseFloat(r['SELLINGPRICE']); return !isNaN(p)&&p>0; })
-        .sort(function(a,b){ return parseFloat(a['SELLINGPRICE'])-parseFloat(b['SELLINGPRICE']); });
-      var az=cleanData.filter(function(r){return r.VEHICLELOCATION==='AZ';}).length;
-      var tx=cleanData.filter(function(r){return r.VEHICLELOCATION==='TX';}).length;
-      var avg=cleanData.reduce(function(s,r){return s+parseFloat(r['SELLINGPRICE']);},0)/cleanData.length;
-      document.getElementById('sTotal').textContent = cleanData.length;
-      document.getElementById('sAZ').textContent = az;
-      document.getElementById('sTX').textContent = tx;
-      document.getElementById('sAvg').textContent = '$'+Math.round(avg/1000)+'k';
-      document.getElementById('statsRow').style.display = 'grid';
+      var wb=XLSX.read(e.target.result,{type:'binary'});
+      var raw=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+      cleanData=raw.map(function(r){var o={};Object.keys(r).forEach(function(k){o[k]=r[k];});o.VEHICLELOCATION=resolveLoc(r);return o;}).filter(function(r){var p=parseFloat(r['SELLINGPRICE']);return !isNaN(p)&&p>0;}).sort(function(a,b){return parseFloat(a['SELLINGPRICE'])-parseFloat(b['SELLINGPRICE']);});
+      var az=cleanData.filter(r=>r.VEHICLELOCATION==='AZ').length;
+      var tx=cleanData.filter(r=>r.VEHICLELOCATION==='TX').length;
+      var avg=cleanData.reduce((s,r)=>s+parseFloat(r['SELLINGPRICE']),0)/cleanData.length;
+      document.getElementById('sTotal').textContent=cleanData.length;
+      document.getElementById('sAZ').textContent=az;
+      document.getElementById('sTX').textContent=tx;
+      document.getElementById('sAvg').textContent='$'+Math.round(avg/1000)+'k';
+      document.getElementById('statsRow').style.display='grid';
       buildPreview(); buildEmail();
       showProg(false);
       showS('uploadStatus','Loaded '+cleanData.length+' units - '+az+' Phoenix (AZ), '+tx+' Dallas (TX).','success');
       document.getElementById('previewCard').style.display='block';
       document.getElementById('sheetsCard').style.display='block';
       document.getElementById('emailCard').style.display='block';
-      if (accessToken) document.getElementById('syncBtn').disabled = false;
-    } catch(err) {
-      showProg(false);
-      showS('uploadStatus','Error reading file. Make sure it is the correct CSV.','error');
-    }
+      if(accessToken) document.getElementById('syncBtn').disabled=false;
+      checkCSVStatus();
+    } catch(err){showProg(false);showS('uploadStatus','Error reading file. Make sure it is the correct CSV.','error');}
   };
   reader.readAsBinaryString(file);
 }
+
 function buildPreview() {
-  var tb = document.getElementById('previewBody');
-  tb.innerHTML = '';
-  cleanData.forEach(function(r) {
-    var loc = r.VEHICLELOCATION;
-    var tr = document.createElement('tr');
-    tr.innerHTML = '<td>'+(r.STOCKNO||'')+'</td><td style="font-size:9px;color:#777">'+(r.VIN||'')+'</td><td>'+(r.YEAR||'')+'</td><td>'+(r.MAKE||'')+'</td><td>'+(r.MODEL||'')+'</td><td style="font-size:10px">'+(r.TRIM||'')+'</td><td>'+fmtMi(r.ODOMETER)+'</td><td style="font-size:10px">'+(r.ENGINE||'')+'</td><td style="font-size:10px">'+(r.DRIVELINE||'')+'</td><td style="font-size:10px">'+cleanTrans(r.TRANSMISSION||'')+'</td><td style="font-size:10px">'+(r.EXTERIORCOLOR||'')+'</td><td style="font-weight:700;color:#1a6b2a">'+fmtPr(r.SELLINGPRICE)+'</td><td><span class="tag tag-'+loc.toLowerCase()+'">'+loc+'</span></td>';
+  var tb=document.getElementById('previewBody'); tb.innerHTML='';
+  cleanData.forEach(function(r){
+    var loc=r.VEHICLELOCATION; var tr=document.createElement('tr');
+    tr.innerHTML='<td>'+(r.STOCKNO||'')+'</td><td style="font-size:9px;color:#777">'+(r.VIN||'')+'</td><td>'+(r.YEAR||'')+'</td><td>'+(r.MAKE||'')+'</td><td>'+(r.MODEL||'')+'</td><td style="font-size:10px">'+(r.TRIM||'')+'</td><td>'+fmtMi(r.ODOMETER)+'</td><td style="font-size:10px">'+(r.ENGINE||'')+'</td><td style="font-size:10px">'+(r.DRIVELINE||'')+'</td><td style="font-size:10px">'+cleanTrans(r.TRANSMISSION||'')+'</td><td style="font-size:10px">'+(r.EXTERIORCOLOR||'')+'</td><td style="font-weight:700;color:#1a6b2a">'+fmtPr(r.SELLINGPRICE)+'</td><td><span class="tag tag-'+loc.toLowerCase()+'">'+loc+'</span></td>';
     tb.appendChild(tr);
   });
 }
+
 function buildEmail() {
-  var subject = 'Vehicle Buyers - '+TODAY.short+' Inventory List';
-  var body = 'Happy '+TODAY.day+',\n\nHere\'s our refreshed inventory list. Units are located in Phoenix, AZ 85027 and Lewisville, TX 75056.\n\nThe Google Sheets link is below, or I attached a PDF with the list. Use whichever is more convenient!\n\n'+SHEETS_LINK+'\n\nThese vehicles are also available for purchase online at '+WEBSITE+'\n\nThanks,\nKorbin Plotke\n480-646-0135\nWholesale Manager\nVehicle Buyers Auto Auction';
-  document.getElementById('emailSubject').value = subject;
-  document.getElementById('emailBody').value = body;
-  document.getElementById('bccCount').textContent = DEALER_EMAILS.length;
-  document.getElementById('bccDisplay').textContent = DEALER_EMAILS.join('; ');
+  var subject='Vehicle Buyers - '+TODAY.short+' Inventory List';
+  var body='Happy '+TODAY.day+',\n\nHere\'s our refreshed inventory list. Units are located in Phoenix, AZ 85027 and Lewisville, TX 75056.\n\nThe Google Sheets link is below, or I attached a PDF with the list. Use whichever is more convenient!\n\n'+SHEETS_LINK+'\n\nThese vehicles are also available for purchase online at '+WEBSITE+'\n\nThanks,\nKorbin Plotke\n480-646-0135\nWholesale Manager\nVehicle Buyers Auto Auction';
+  document.getElementById('emailSubject').value=subject;
+  document.getElementById('emailBody').value=body;
+  document.getElementById('bccCount').textContent=DEALER_EMAILS.length;
+  document.getElementById('bccDisplay').textContent=DEALER_EMAILS.join('; ');
 }
+
 async function syncToSheets() {
-  if (!accessToken) { triggerAuth(); return; }
-  var btn = document.getElementById('syncBtn');
-  btn.disabled = true; btn.textContent = 'Syncing...';
+  if(!accessToken){triggerAuth();return;}
+  var btn=document.getElementById('syncBtn');
+  btn.disabled=true; btn.textContent='Syncing...';
   showS('sheetsStatus','Uploading fresh inventory...','info');
-  var headers = ['STOCK #','VIN','YEAR','MAKE','MODEL','TRIM','MILES','ENGINE','DRIVELINE','TRANSMISSION','EXT COLOR','PRICE','LOCATION'];
-  var rows = cleanData.map(function(r){return [r.STOCKNO||'',r.VIN||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',parseInt(r.ODOMETER)||'',r.ENGINE||'',r.DRIVELINE||'',cleanTrans(r.TRANSMISSION||''),r.EXTERIORCOLOR||'',parseFloat(r.SELLINGPRICE)||'',r.VEHICLELOCATION||''];});
-  var values = [headers].concat(rows);
-  var totalRows = values.length;
+  var headers=['STOCK #','VIN','YEAR','MAKE','MODEL','TRIM','MILES','ENGINE','DRIVELINE','TRANSMISSION','EXT COLOR','PRICE','LOCATION'];
+  var rows=cleanData.map(r=>[r.STOCKNO||'',r.VIN||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',parseInt(r.ODOMETER)||'',r.ENGINE||'',r.DRIVELINE||'',cleanTrans(r.TRANSMISSION||''),r.EXTERIORCOLOR||'',parseFloat(r.SELLINGPRICE)||'',r.VEHICLELOCATION||'']);
+  var values=[headers].concat(rows); var totalRows=values.length;
   try {
-    var metaRes = await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+SHEET_ID,{headers:{'Authorization':'Bearer '+accessToken}});
-    var meta = await metaRes.json();
-    var existingSheets = meta.sheets.map(function(s){return s.properties.title;});
+    var metaRes=await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+SHEET_ID,{headers:{'Authorization':'Bearer '+accessToken}});
+    var meta=await metaRes.json();
+    var existingSheets=meta.sheets.map(s=>s.properties.title);
     var sheetId;
-    if (!existingSheets.includes(SHEET_TAB)) {
-      var addRes = await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+SHEET_ID+':batchUpdate',{method:'POST',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({requests:[{addSheet:{properties:{title:SHEET_TAB}}}]})});
-      var addData = await addRes.json();
-      sheetId = addData.replies[0].addSheet.properties.sheetId;
+    if(!existingSheets.includes(SHEET_TAB)){
+      var addRes=await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+SHEET_ID+':batchUpdate',{method:'POST',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({requests:[{addSheet:{properties:{title:SHEET_TAB}}}]})});
+      var addData=await addRes.json(); sheetId=addData.replies[0].addSheet.properties.sheetId;
     } else {
-      sheetId = meta.sheets.find(function(s){return s.properties.title===SHEET_TAB;}).properties.sheetId;
+      sheetId=meta.sheets.find(s=>s.properties.title===SHEET_TAB).properties.sheetId;
       await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+SHEET_ID+'/values/'+encodeURIComponent(SHEET_TAB)+':clear',{method:'POST',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'}});
     }
     await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+SHEET_ID+'/values/'+encodeURIComponent(SHEET_TAB)+'!A1?valueInputOption=RAW',{method:'PUT',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({values:values})});
-    var NC = NUM_COLS;
-    var requests = [];
+    var NC=NUM_COLS; var requests=[];
     requests.push({repeatCell:{range:{sheetId:sheetId,startRowIndex:0,endRowIndex:1000,startColumnIndex:0,endColumnIndex:26},cell:{userEnteredFormat:{}},fields:'userEnteredFormat'}});
     requests.push({repeatCell:{range:{sheetId:sheetId,startRowIndex:0,endRowIndex:1,startColumnIndex:0,endColumnIndex:NC},cell:{userEnteredFormat:{backgroundColor:color('#1A1A2E'),textFormat:{foregroundColor:{red:1,green:1,blue:1},bold:true,fontSize:11},horizontalAlignment:'CENTER',verticalAlignment:'MIDDLE'}},fields:'userEnteredFormat(backgroundColor,textFormat,horizontalAlignment,verticalAlignment)'}});
-    for (var i=0;i<cleanData.length;i++) {
-      var bg = cleanData[i].VEHICLELOCATION==='AZ' ? color('#E8F4FD') : color('#FFF8E8');
-      requests.push({repeatCell:{range:{sheetId:sheetId,startRowIndex:i+1,endRowIndex:i+2,startColumnIndex:0,endColumnIndex:NC},cell:{userEnteredFormat:{backgroundColor:bg,textFormat:{fontSize:9},verticalAlignment:'MIDDLE'}},fields:'userEnteredFormat(backgroundColor,textFormat,verticalAlignment)'}});
-    }
+    for(var i=0;i<cleanData.length;i++){var bg=cleanData[i].VEHICLELOCATION==='AZ'?color('#E8F4FD'):color('#FFF8E8');requests.push({repeatCell:{range:{sheetId:sheetId,startRowIndex:i+1,endRowIndex:i+2,startColumnIndex:0,endColumnIndex:NC},cell:{userEnteredFormat:{backgroundColor:bg,textFormat:{fontSize:9},verticalAlignment:'MIDDLE'}},fields:'userEnteredFormat(backgroundColor,textFormat,verticalAlignment)'}});}
     requests.push({repeatCell:{range:{sheetId:sheetId,startRowIndex:1,endRowIndex:totalRows,startColumnIndex:11,endColumnIndex:12},cell:{userEnteredFormat:{textFormat:{bold:true,foregroundColor:color('#1a6b2a')},numberFormat:{type:'CURRENCY',pattern:'"$"#,##0'},horizontalAlignment:'CENTER'}},fields:'userEnteredFormat(textFormat,numberFormat,horizontalAlignment)'}});
     requests.push({repeatCell:{range:{sheetId:sheetId,startRowIndex:1,endRowIndex:totalRows,startColumnIndex:6,endColumnIndex:7},cell:{userEnteredFormat:{numberFormat:{type:'NUMBER',pattern:'#,##0'},horizontalAlignment:'CENTER'}},fields:'userEnteredFormat(numberFormat,horizontalAlignment)'}});
-    [0,1,2,12].forEach(function(col){requests.push({repeatCell:{range:{sheetId:sheetId,startRowIndex:1,endRowIndex:totalRows,startColumnIndex:col,endColumnIndex:col+1},cell:{userEnteredFormat:{horizontalAlignment:'CENTER'}},fields:'userEnteredFormat(horizontalAlignment)'}});});
-    [90,160,45,80,90,160,65,110,90,140,120,70,60].forEach(function(px,i){requests.push({updateDimensionProperties:{range:{sheetId:sheetId,dimension:'COLUMNS',startIndex:i,endIndex:i+1},properties:{pixelSize:px},fields:'pixelSize'}});});
+    [0,1,2,12].forEach(col=>requests.push({repeatCell:{range:{sheetId:sheetId,startRowIndex:1,endRowIndex:totalRows,startColumnIndex:col,endColumnIndex:col+1},cell:{userEnteredFormat:{horizontalAlignment:'CENTER'}},fields:'userEnteredFormat(horizontalAlignment)'}}));
+    [90,160,45,80,90,160,65,110,90,140,120,70,60].forEach((px,i)=>requests.push({updateDimensionProperties:{range:{sheetId:sheetId,dimension:'COLUMNS',startIndex:i,endIndex:i+1},properties:{pixelSize:px},fields:'pixelSize'}}));
     requests.push({updateDimensionProperties:{range:{sheetId:sheetId,dimension:'ROWS',startIndex:0,endIndex:1},properties:{pixelSize:28},fields:'pixelSize'}});
     requests.push({updateDimensionProperties:{range:{sheetId:sheetId,dimension:'ROWS',startIndex:1,endIndex:totalRows},properties:{pixelSize:20},fields:'pixelSize'}});
     requests.push({updateSheetProperties:{properties:{sheetId:sheetId,gridProperties:{frozenRowCount:1}},fields:'gridProperties.frozenRowCount'}});
@@ -580,67 +649,38 @@ async function syncToSheets() {
     document.getElementById('sheetsBanner').style.display='flex';
     btn.textContent='Synced!';
     setTimeout(function(){btn.textContent='Sync Inventory to Google Sheet';btn.disabled=false;},4000);
-  } catch(e) {
-    showS('sheetsStatus','Network error. Check your connection and try again.','error');
-    btn.textContent='Sync Inventory to Google Sheet'; btn.disabled=false;
-  }
+  } catch(e){showS('sheetsStatus','Network error. Check your connection and try again.','error');btn.textContent='Sync Inventory to Google Sheet';btn.disabled=false;}
 }
-function openGmail() {
-  var sub = document.getElementById('emailSubject').value;
-  var body = document.getElementById('emailBody').value;
-  window.open('https://mail.google.com/mail/?view=cm&fs=1&bcc='+encodeURIComponent(DEALER_EMAILS.join(','))+'&su='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body),'_blank');
-  document.getElementById('gmailBanner').style.display='flex';
-}
-function copyBody() {
-  navigator.clipboard.writeText(document.getElementById('emailBody').value).then(function(){
-    var b=event.target; b.textContent='Copied!'; setTimeout(function(){b.textContent='Copy Email Body';},2000);
-  });
-}
-function copyBCC() {
-  navigator.clipboard.writeText(DEALER_EMAILS.join('; ')).then(function(){
-    var b=event.target; b.textContent='Copied!'; setTimeout(function(){b.textContent='Copy BCC List';},2000);
-  });
-}
-function downloadExcel() {
+
+function openGmail(){var sub=document.getElementById('emailSubject').value;var body=document.getElementById('emailBody').value;window.open('https://mail.google.com/mail/?view=cm&fs=1&bcc='+encodeURIComponent(DEALER_EMAILS.join(','))+'&su='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body),'_blank');document.getElementById('gmailBanner').style.display='flex';}
+function copyBody(){navigator.clipboard.writeText(document.getElementById('emailBody').value).then(function(){var b=event.target;b.textContent='Copied!';setTimeout(()=>b.textContent='Copy Email Body',2000);});}
+function copyBCC(){navigator.clipboard.writeText(DEALER_EMAILS.join('; ')).then(function(){var b=event.target;b.textContent='Copied!';setTimeout(()=>b.textContent='Copy BCC List',2000);});}
+
+function downloadExcel(){
   var wb=XLSX.utils.book_new();
-  var wsData=[['STOCK #','VIN','YEAR','MAKE','MODEL','TRIM','MILES','ENGINE','DRIVELINE','TRANSMISSION','EXT COLOR','PRICE','LOCATION']].concat(cleanData.map(function(r){return [r.STOCKNO||'',r.VIN||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',parseInt(r.ODOMETER)||'',r.ENGINE||'',r.DRIVELINE||'',cleanTrans(r.TRANSMISSION||''),r.EXTERIORCOLOR||'',parseFloat(r.SELLINGPRICE)||'',r.VEHICLELOCATION||''];}));
+  var wsData=[['STOCK #','VIN','YEAR','MAKE','MODEL','TRIM','MILES','ENGINE','DRIVELINE','TRANSMISSION','EXT COLOR','PRICE','LOCATION']].concat(cleanData.map(r=>[r.STOCKNO||'',r.VIN||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',parseInt(r.ODOMETER)||'',r.ENGINE||'',r.DRIVELINE||'',cleanTrans(r.TRANSMISSION||''),r.EXTERIORCOLOR||'',parseFloat(r.SELLINGPRICE)||'',r.VEHICLELOCATION||'']));
   var ws=XLSX.utils.aoa_to_sheet(wsData);
-  ws['!cols']=[11,20,6,11,12,20,9,16,14,20,18,10,9].map(function(w){return {wch:w};});
+  ws['!cols']=[11,20,6,11,12,20,9,16,14,20,18,10,9].map(w=>({wch:w}));
   XLSX.utils.book_append_sheet(wb,ws,'Inventory');
   XLSX.writeFile(wb,'VehicleBuyers_Inventory_'+TODAY.short.replace('/','_')+'.xlsx');
 }
-function downloadPDF() {
+
+function downloadPDF(){
   var doc=new window.jspdf.jsPDF({orientation:'landscape',unit:'pt',format:'letter'});
   var w=doc.internal.pageSize.width;
-  var az=cleanData.filter(function(r){return r.VEHICLELOCATION==='AZ';}).length;
-  var tx=cleanData.filter(function(r){return r.VEHICLELOCATION==='TX';}).length;
-  doc.setFillColor(26,26,46); doc.rect(0,0,w,36,'F');
-  doc.setTextColor(255,255,255); doc.setFontSize(13); doc.setFont('helvetica','bold');
+  var az=cleanData.filter(r=>r.VEHICLELOCATION==='AZ').length;
+  var tx=cleanData.filter(r=>r.VEHICLELOCATION==='TX').length;
+  doc.setFillColor(26,26,46);doc.rect(0,0,w,36,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(13);doc.setFont('helvetica','bold');
   doc.text('VEHICLE BUYERS - WHOLESALE INVENTORY - '+TODAY.long.toUpperCase(),w/2,22,{align:'center'});
-  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(232,184,75);
+  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(232,184,75);
   doc.text(cleanData.length+' Units  -  '+az+' Phoenix (AZ)  -  '+tx+' Dallas (TX)  -  Nationwide Shipping',w/2,31,{align:'center'});
-  doc.autoTable({
-    startY:42,
-    head:[['STOCK #','VIN','YEAR','MAKE','MODEL','TRIM','MILES','ENGINE','DRIVELINE','TRANSMISSION','COLOR','PRICE','LOC']],
-    body:cleanData.map(function(r){return [r.STOCKNO||'',r.VIN||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',fmtMi(r.ODOMETER),r.ENGINE||'',r.DRIVELINE||'',cleanTrans(r.TRANSMISSION||''),r.EXTERIORCOLOR||'',fmtPr(r.SELLINGPRICE),r.VEHICLELOCATION||''];}),
-    styles:{fontSize:7,cellPadding:3},
-    headStyles:{fillColor:[45,53,97],textColor:255,fontStyle:'bold'},
-    columnStyles:{0:{cellWidth:52},1:{cellWidth:82},2:{cellWidth:28},3:{cellWidth:52},4:{cellWidth:58},5:{cellWidth:90},6:{cellWidth:42},7:{cellWidth:68},8:{cellWidth:58},9:{cellWidth:90},10:{cellWidth:70},11:{cellWidth:44,fontStyle:'bold',textColor:[26,107,42]},12:{cellWidth:28}},
-    didParseCell:function(data){if(data.section==='body'){var loc=cleanData[data.row.index]&&cleanData[data.row.index].VEHICLELOCATION;data.cell.styles.fillColor=loc==='AZ'?[232,244,253]:[255,248,232];}},
-    margin:{left:20,right:20}
-  });
+  doc.autoTable({startY:42,head:[['STOCK #','VIN','YEAR','MAKE','MODEL','TRIM','MILES','ENGINE','DRIVELINE','TRANSMISSION','COLOR','PRICE','LOC']],body:cleanData.map(r=>[r.STOCKNO||'',r.VIN||'',r.YEAR||'',r.MAKE||'',r.MODEL||'',r.TRIM||'',fmtMi(r.ODOMETER),r.ENGINE||'',r.DRIVELINE||'',cleanTrans(r.TRANSMISSION||''),r.EXTERIORCOLOR||'',fmtPr(r.SELLINGPRICE),r.VEHICLELOCATION||'']),styles:{fontSize:7,cellPadding:3},headStyles:{fillColor:[45,53,97],textColor:255,fontStyle:'bold'},columnStyles:{0:{cellWidth:52},1:{cellWidth:82},2:{cellWidth:28},3:{cellWidth:52},4:{cellWidth:58},5:{cellWidth:90},6:{cellWidth:42},7:{cellWidth:68},8:{cellWidth:58},9:{cellWidth:90},10:{cellWidth:70},11:{cellWidth:44,fontStyle:'bold',textColor:[26,107,42]},12:{cellWidth:28}},didParseCell:function(data){if(data.section==='body'){var loc=cleanData[data.row.index]&&cleanData[data.row.index].VEHICLELOCATION;data.cell.styles.fillColor=loc==='AZ'?[232,244,253]:[255,248,232];}},margin:{left:20,right:20}});
   doc.save('VehicleBuyers_Inventory_'+TODAY.short.replace('/','_')+'.pdf');
 }
-function showS(id,msg,type){
-  var el=document.getElementById(id);
-  if(!msg){el.style.display='none';return;}
-  el.textContent=msg; el.className='sbar '+type; el.style.display='block';
-}
-function showProg(show){
-  var p=document.getElementById('prog'),pb=document.getElementById('progBar');
-  if(show){p.style.display='block';pb.style.width='0%';setTimeout(function(){pb.style.width='90%';},50);}
-  else{pb.style.width='100%';setTimeout(function(){p.style.display='none';},400);}
-}
+
+function showS(id,msg,type){var el=document.getElementById(id);if(!msg){el.style.display='none';return;}el.textContent=msg;el.className='sbar '+type;el.style.display='block';}
+function showProg(show){var p=document.getElementById('prog'),pb=document.getElementById('progBar');if(show){p.style.display='block';pb.style.width='0%';setTimeout(()=>pb.style.width='90%',50);}else{pb.style.width='100%';setTimeout(()=>p.style.display='none',400);}}
 </script>
 </body>
 </html>
