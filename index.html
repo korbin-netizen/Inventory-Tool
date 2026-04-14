@@ -90,7 +90,7 @@
   .rte-color-wrap { display: flex; align-items: center; gap: 3px; }
   .rte-color-wrap span { font-size: 11px; color: #777; }
   .rte-color { width: 26px; height: 26px; border: 1px solid #dde0ea; border-radius: 4px; cursor: pointer; padding: 2px; }
-  .rte-body { border: 1px solid #dde0ea; border-radius: 0 0 6px 6px; min-height: 260px; max-height: 400px; overflow-y: auto; padding: 14px; font-size: 13px; font-family: Arial, sans-serif; color: #333; line-height: 1.5; outline: none; background: white; }
+  .rte-body { border: 1px solid #dde0ea; border-radius: 0 0 6px 6px; min-height: 200px; max-height: 400px; overflow-y: auto; padding: 14px; font-size: 13px; font-family: Arial, sans-serif; color: #333; line-height: 1.5; outline: none; background: white; }
   .rte-body:focus { border-color: #2D3561; }
   .rte-body p { margin: 0 0 8px 0; }
   .sig-preview { border-top: 1px solid #e0e0e0; margin-top: 16px; padding-top: 14px; font-family: Arial, sans-serif; }
@@ -177,12 +177,58 @@
   <div class="card" id="emailCard" style="display:none">
     <div class="card-header"><span class="step">4</span> Send Email Blast</div>
     <div class="card-body">
-      <div class="ef"><label>Subject</label><input type="text" id="emailSubject" readonly></div>
+      <div class="ef"><label>Subject</label><input type="text" id="emailSubject"></div>
       <div class="ef"><label>BCC - <span id="bccCount"></span> dealers</label><div class="bcc-box" id="bccDisplay"></div></div>
-      <div class="ef"><label>Email Body</label><textarea id="emailBody"></textarea></div>
+      <label class="rte-label">Email Body</label>
+      <div class="rte-toolbar" id="blastToolbar">
+        <select class="rte-select" onchange="execCmdBlast('fontSize', this.value); this.value='3'">
+          <option value="3">Size</option>
+          <option value="1">Small</option>
+          <option value="3">Normal</option>
+          <option value="4">Large</option>
+          <option value="5">X-Large</option>
+        </select>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="execCmdBlast('bold')"><b>B</b></button>
+        <button class="rte-btn" onclick="execCmdBlast('italic')"><i>I</i></button>
+        <button class="rte-btn" onclick="execCmdBlast('underline')"><u>U</u></button>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="execCmdBlast('insertUnorderedList')">&#8226; List</button>
+        <button class="rte-btn" onclick="execCmdBlast('insertOrderedList')">1. List</button>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="execCmdBlast('justifyLeft')">&#8676;</button>
+        <button class="rte-btn" onclick="execCmdBlast('justifyCenter')">&#8677;</button>
+        <div class="rte-sep"></div>
+        <div class="rte-color-wrap">
+          <span>Text</span>
+          <input type="color" class="rte-color" value="#000000" onchange="execCmdBlast('foreColor', this.value)">
+        </div>
+        <div class="rte-color-wrap">
+          <span>Highlight</span>
+          <input type="color" class="rte-color" value="#FFFF00" onchange="applyHighlightBlast(this.value)">
+        </div>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="execCmdBlast('removeFormat')">Clear</button>
+        <button class="rte-btn" onclick="insertLinkBlast()">Link</button>
+      </div>
+      <div class="rte-body" id="blastBody" contenteditable="true"></div>
+      <div class="sig-preview">
+        <div class="sig-dashes">--</div>
+        <div class="sig-name-row">
+          <span class="sig-name">Korbin Plotke</span>
+          <span class="sig-pipe">|</span>
+          <span class="sig-title">Wholesale Manager</span>
+        </div>
+        <div class="sig-company">Vehicle Buyers Auto Auction</div>
+        <hr class="sig-line">
+        <div class="sig-contact">
+          Cell: 480-646-0135 &nbsp;|&nbsp;
+          <a href="https://www.vehiclebuyersautoauction.com" target="_blank">vehiclebuyersautoauction.com</a>
+        </div>
+      </div>
       <div class="btn-row">
         <button class="btn btn-grn" onclick="openGmail()">Open in Gmail</button>
-        <button class="btn btn-dark" onclick="copyBody()">Copy Email Body</button>
+        <button class="btn btn-dark" onclick="copyBlastBody()">Copy Email Body</button>
         <button class="btn btn-gold" onclick="copyBCC()">Copy BCC List</button>
       </div>
       <div class="banner banner-grn" id="gmailBanner">
@@ -247,7 +293,6 @@
       </div>
     </div>
   </div>
-
   <div class="card">
     <div class="card-header"><span class="step">2</span> Email Preview</div>
     <div class="card-body">
@@ -304,7 +349,6 @@
       </div>
     </div>
   </div>
-
   <div class="card">
     <div class="card-header"><span class="step">3</span> Send &amp; Save</div>
     <div class="card-body">
@@ -365,14 +409,14 @@ function switchTab(tab, el) {
   if (tab === 'onboard') { checkCSVStatus(); updatePreview(); }
 }
 
-function execCmd(cmd, val) {
-  document.getElementById('rteBody').focus();
+// ─── BLAST RTE ───────────────────────────────────────────────
+function execCmdBlast(cmd, val) {
+  document.getElementById('blastBody').focus();
   document.execCommand(cmd, false, val || null);
 }
-
-function applyHighlight(color) {
-  var rte = document.getElementById('rteBody');
-  rte.focus();
+function applyHighlightBlast(color) {
+  var el = document.getElementById('blastBody');
+  el.focus();
   var sel = window.getSelection();
   if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
     document.execCommand('backColor', false, color);
@@ -380,12 +424,32 @@ function applyHighlight(color) {
     alert('Please select some text first, then click the highlight color.');
   }
 }
+function insertLinkBlast() {
+  var url = prompt('Enter URL:', 'https://');
+  if (url) { document.getElementById('blastBody').focus(); document.execCommand('createLink', false, url); }
+}
 
+// ─── ONBOARD RTE ─────────────────────────────────────────────
+function execCmd(cmd, val) {
+  document.getElementById('rteBody').focus();
+  document.execCommand(cmd, false, val || null);
+}
+function applyHighlight(color) {
+  var el = document.getElementById('rteBody');
+  el.focus();
+  var sel = window.getSelection();
+  if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
+    document.execCommand('backColor', false, color);
+  } else {
+    alert('Please select some text first, then click the highlight color.');
+  }
+}
 function insertLink() {
   var url = prompt('Enter URL:', 'https://');
   if (url) { document.getElementById('rteBody').focus(); document.execCommand('createLink', false, url); }
 }
 
+// ─── ONBOARD DEALER ──────────────────────────────────────────
 function checkCSVStatus() {
   var warning = document.getElementById('csvWarning');
   var pdfStatus = document.getElementById('ob-pdf-status');
@@ -419,7 +483,6 @@ function updatePreview() {
   var password = document.getElementById('ob-password').value || '';
   var firstName = contact.split(' ')[0] || '';
   var greeting = firstName ? getGreeting() + ' ' + firstName + ',' : getGreeting() + ',';
-
   var html = '<p>' + greeting + '</p>';
   html += '<p>Here\'s our refreshed inventory list. Units are located in Phoenix, AZ 85027 and Lewisville, TX 75056.</p>';
   html += '<p>The Google Sheets link is below, or I can attach a PDF with the list. Use whichever is more convenient!</p>';
@@ -538,6 +601,7 @@ function openGmailOnboard() {
   window.open('https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(email)+'&su='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body),'_blank');
 }
 
+// ─── INVENTORY TOOL ──────────────────────────────────────────
 function color(h){return {red:parseInt(h.slice(1,3),16)/255,green:parseInt(h.slice(3,5),16)/255,blue:parseInt(h.slice(5,7),16)/255};}
 function fmtMi(v){var n=parseInt(v);return isNaN(n)?'':n.toLocaleString();}
 function fmtPr(v){var n=parseFloat(v);return isNaN(n)?'':'$'+Math.round(n).toLocaleString();}
@@ -625,11 +689,17 @@ function buildPreview(){
 
 function buildEmail(){
   var subject='Vehicle Buyers - '+TODAY.short+' Inventory List';
-  var body='Happy '+TODAY.day+',\n\nHere\'s our refreshed inventory list. Units are located in Phoenix, AZ 85027 and Lewisville, TX 75056.\n\nThe Google Sheets link is below, or I attached a PDF with the list. Use whichever is more convenient!\n\n'+SHEETS_LINK+'\n\nThese vehicles are also available for purchase online at '+WEBSITE+'\n\nThanks,\nKorbin Plotke\n480-646-0135\nWholesale Manager\nVehicle Buyers Auto Auction';
   document.getElementById('emailSubject').value=subject;
-  document.getElementById('emailBody').value=body;
   document.getElementById('bccCount').textContent=DEALER_EMAILS.length;
   document.getElementById('bccDisplay').textContent=DEALER_EMAILS.join('; ');
+
+  // Build rich text email body
+  var html = '<p>Happy ' + TODAY.day + ',</p>';
+  html += '<p>Here\'s our refreshed inventory list. Units are located in Phoenix, AZ 85027 and Lewisville, TX 75056.</p>';
+  html += '<p>The Google Sheets link is below, or I attached a PDF with the list. Use whichever is more convenient!</p>';
+  html += '<p><a href="' + SHEETS_LINK + '">' + SHEETS_LINK + '</a></p>';
+  html += '<p>These vehicles are also available for purchase online at <a href="https://' + WEBSITE + '">' + WEBSITE + '</a></p>';
+  document.getElementById('blastBody').innerHTML = html;
 }
 
 async function syncToSheets(){
@@ -673,9 +743,24 @@ async function syncToSheets(){
   }catch(e){showS('sheetsStatus','Network error. Check your connection and try again.','error');btn.textContent='Sync Inventory to Google Sheet';btn.disabled=false;}
 }
 
-function openGmail(){var sub=document.getElementById('emailSubject').value;var body=document.getElementById('emailBody').value;window.open('https://mail.google.com/mail/?view=cm&fs=1&bcc='+encodeURIComponent(DEALER_EMAILS.join(','))+'&su='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body),'_blank');document.getElementById('gmailBanner').style.display='flex';}
-function copyBody(){navigator.clipboard.writeText(document.getElementById('emailBody').value).then(function(){var b=event.target;b.textContent='Copied!';setTimeout(()=>b.textContent='Copy Email Body',2000);});}
-function copyBCC(){navigator.clipboard.writeText(DEALER_EMAILS.join('; ')).then(function(){var b=event.target;b.textContent='Copied!';setTimeout(()=>b.textContent='Copy BCC List',2000);});}
+function openGmail(){
+  var sub=document.getElementById('emailSubject').value;
+  var body=document.getElementById('blastBody').innerText;
+  window.open('https://mail.google.com/mail/?view=cm&fs=1&bcc='+encodeURIComponent(DEALER_EMAILS.join(','))+'&su='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body),'_blank');
+  document.getElementById('gmailBanner').style.display='flex';
+}
+
+function copyBlastBody(){
+  navigator.clipboard.writeText(document.getElementById('blastBody').innerText).then(function(){
+    var b=event.target;b.textContent='Copied!';setTimeout(()=>b.textContent='Copy Email Body',2000);
+  });
+}
+
+function copyBCC(){
+  navigator.clipboard.writeText(DEALER_EMAILS.join('; ')).then(function(){
+    var b=event.target;b.textContent='Copied!';setTimeout(()=>b.textContent='Copy BCC List',2000);
+  });
+}
 
 function downloadExcel(){
   var wb=XLSX.utils.book_new();
