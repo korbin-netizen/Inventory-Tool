@@ -382,7 +382,7 @@ var SHEETS_LINK = 'https://docs.google.com/spreadsheets/d/1SZrZV71WAAJ7jHpr_Ulie
 var WEBSITE = 'www.vehiclebuyersautoauction.com';
 var cleanData = [], accessToken = null, onboardAccessToken = null;
 
-const DEALER_EMAILS = ["vincent.martincavage@car-mart.com","dportillo@orielly.com","nfoster@driveplanet.com","guyg@lambauto.com","pete@lakepowellford.com","droller@yatesbuickgmc.com","bradf@bergegroup.com","kevindewey@santanford.com","carlos@universalmitsubishi.com","garen@subaruofglendale.net","cmonroy0126@gmail.com","ihartman@hgreg.com","rcastillo@epicchevrolet.com","BMcQueen@penskeautomotive.com","amanypenny@starfordinc.com","Jeff@hondaofpasadena.com","jlee@metrohonda.com","jharmond@airportmarinahonda.com","Harry@simivalleycdjr.com","eli@dcmitsu.com","Curtisking94571@gmail.com","sfields@mossy.com","OsMendoza@mossy.com","amorfin@bakersfieldhyundai.com","cmcandrew@niello.com","mmaledon@elwaydealers.net","djordan@castlerockautoplex.com","bdanner@freewayfordonline.com","jbeard@elwaydealers.net","Daltonplattner@plattnerautomotivegroup.com","kevinejohns@gmail.com","JasonHarrison@lithia.com","Bzukas@mariontoyota.com","bnikolov@motorwerks.com","Kerry.boettcher@kunes.com","Kelly@steveschmitt.com","alex@marshallchevrolet.com","Steve.medina@rohrmanauto.com","levi.laws@rohrmanauto.com","tgriffin@victorykc.com","mclark@foxmotors.com","dchung@lssubaru.com","tyler.yates@heartlandcdjr.com","lucas@heartlandchevy.com","mdavis@justbetterauto.com","Adamg@bobmariano.com","stevenfrancoeur@merchantsauto.com","Pierre@karmawestfield.com","MMarsh@vtaig.com","ccooke@qualitydeal.com","jonathanb@freemanauto.com","Jkilway@casaautogroup.com","mmccarty@chalmersford.com","astrebe@chalmersford.com","1mesquitesales@gmail.com","awatson@gaudinford.com","devin@r21motorsports.com","rmurray@fivestaronline.net","price@fivestaronline.net","jordan.baker@fivestaronline.net","spankow@basilcars.com","Nick.landman17@gmail.com","Jewls@legendmotors.com","Joshb@chevroletoftroy.com","jfulep@serpentinichevy.com","rvirgen@spartanburghonda.com","tswanger@verneide.com","German.sanchez@dickpoe.com","cpolk@gpolk.com","Richard.andrews@glasscockchevrolet.com","andrew_osterhoudt@jenkinscars.com","Jason.leney@holidayautogroup.com","rfugate@brinsonautogroup.com","tony@youdriveauto.com","scummings@gayfamilyauto.com","zsanders@foundationauto.com","ryan@sames.net","rcarrera@sames.net","bwilkins@teamgranger.com","jfigueroa@metronissandallas.com","paulsharp@fredhaasnissan.com","brentwilliams@covertauto.com","jessegenovese@covertauto.com","tylerishak@covertauto.com","justingreene@brownfieldautomotive.com","ktcoles@msn.com","nickjex@heydoug.net","parker.w@heritageeprice.com","bheffron@kengarff.com","blain@wattsautomotive.com","wardf@chevroletofeverett.com","rmoe@chevroletofeverett.com","Dmcmiller@iahyundai.com","mattmartin@gabrieljordan.com","chet.crain@landerscorp.com","jsims@seguinchevrolet.com","cbolger@hessertchevy.com","Slowrider011389@gmail.com","tszymanski@donlarson.com","ffitzmaurice@bobjohnsonauto.com","dsukhai23@gmail.com","rdiaz@myalexandertoyota.com","Thompson.kevin93@gmail.com","Jckksteiner@gmail.com","jeremy.nunes@duprattford.com","Jeremydchick@gmail.com","josh@meadowsford.com","atyler@walser.com","lterry@gpolk.com","rpage@steadauto.com","jsminear@gmail.com","aron@meadowsautogroup.com","Shane.varner@kcpremierauto.com","roberto@cdjrelmhurst.com","evirgen@cdjrelmhurst.com"];
+const DEALER_EMAILS = ["vincent.martincavage@car-mart.com","dportillo@orielly.com","nfoster@driveplanet.com","guyg@lambauto.com","droller@yatesbuickgmc.com","bradf@bergegroup.com","kevindewey@santanford.com","carlos@universalmitsubishi.com","garen@subaruofglendale.net","cmonroy0126@gmail.com","ihartman@hgreg.com","rcastillo@epicchevrolet.com","BMcQueen@penskeautomotive.com","amanypenny@starfordinc.com","Jeff@hondaofpasadena.com","jlee@metrohonda.com","jharmond@airportmarinahonda.com","Harry@simivalleycdjr.com","eli@dcmitsu.com","Curtisking94571@gmail.com","sfields@mossy.com","OsMendoza@mossy.com","amorfin@bakersfieldhyundai.com","cmcandrew@niello.com","mmaledon@elwaydealers.net","djordan@castlerockautoplex.com","bdanner@freewayfordonline.com","jbeard@elwaydealers.net","Daltonplattner@plattnerautomotivegroup.com","kevinejohns@gmail.com","JasonHarrison@lithia.com","Bzukas@mariontoyota.com","bnikolov@motorwerks.com","Kerry.boettcher@kunes.com","Kelly@steveschmitt.com","alex@marshallchevrolet.com","Steve.medina@rohrmanauto.com","levi.laws@rohrmanauto.com","tgriffin@victorykc.com","mclark@foxmotors.com","dchung@lssubaru.com","tyler.yates@heartlandcdjr.com","lucas@heartlandchevy.com","mdavis@justbetterauto.com","Adamg@bobmariano.com","stevenfrancoeur@merchantsauto.com","Pierre@karmawestfield.com","MMarsh@vtaig.com","ccooke@qualitydeal.com","jonathanb@freemanauto.com","Jkilway@casaautogroup.com","mmccarty@chalmersford.com","astrebe@chalmersford.com","1mesquitesales@gmail.com","awatson@gaudinford.com","devin@r21motorsports.com","rmurray@fivestaronline.net","price@fivestaronline.net","jordan.baker@fivestaronline.net","spankow@basilcars.com","Nick.landman17@gmail.com","Jewls@legendmotors.com","Joshb@chevroletoftroy.com","jfulep@serpentinichevy.com","tswanger@verneide.com","German.sanchez@dickpoe.com","cpolk@gpolk.com","Richard.andrews@glasscockchevrolet.com","andrew_osterhoudt@jenkinscars.com","Jason.leney@holidayautogroup.com","rfugate@brinsonautogroup.com","tony@youdriveauto.com","scummings@gayfamilyauto.com","zsanders@foundationauto.com","ryan@sames.net","rcarrera@sames.net","bwilkins@teamgranger.com","jfigueroa@metronissandallas.com","paulsharp@fredhaasnissan.com","brentwilliams@covertauto.com","jessegenovese@covertauto.com","tylerishak@covertauto.com","justingreene@brownfieldautomotive.com","ktcoles@msn.com","nickjex@heydoug.net","parker.w@heritageeprice.com","bheffron@kengarff.com","blain@wattsautomotive.com","wardf@chevroletofeverett.com","rmoe@chevroletofeverett.com","Dmcmiller@iahyundai.com","mattmartin@gabrieljordan.com","chet.crain@landerscorp.com","jsims@seguinchevrolet.com","cbolger@hessertchevy.com","Slowrider011389@gmail.com","tszymanski@donlarson.com","ffitzmaurice@bobjohnsonauto.com","dsukhai23@gmail.com","lhimler@charper.com","DiscoveryAutoLocator@outlook.com","Buyer@mountaintoptomors.com","davew@wilsonwheelers.com","caltamirano@myalexandertoyota.com","Thompson.kevin93@gmail.com","Jckksteiner@gmail.com","jeremy.nunes@duprattford.com","Jeremydchick@gmail.com","josh@meadowsford.com","atyler@walser.com","lterry@gpolk.com","rpage@steadauto.com","jsminear@gmail.com","aron@meadowsautogroup.com","Shane.varner@kcpremierauto.com","roberto@cdjrelmhurst.com","evirgen@cdjrelmhurst.com"];
 
 var d = new Date();
 var TODAY = {
@@ -409,7 +409,6 @@ function switchTab(tab, el) {
   if (tab === 'onboard') { checkCSVStatus(); updatePreview(); }
 }
 
-// ─── BLAST RTE ───────────────────────────────────────────────
 function execCmdBlast(cmd, val) {
   document.getElementById('blastBody').focus();
   document.execCommand(cmd, false, val || null);
@@ -429,7 +428,6 @@ function insertLinkBlast() {
   if (url) { document.getElementById('blastBody').focus(); document.execCommand('createLink', false, url); }
 }
 
-// ─── ONBOARD RTE ─────────────────────────────────────────────
 function execCmd(cmd, val) {
   document.getElementById('rteBody').focus();
   document.execCommand(cmd, false, val || null);
@@ -449,7 +447,6 @@ function insertLink() {
   if (url) { document.getElementById('rteBody').focus(); document.execCommand('createLink', false, url); }
 }
 
-// ─── ONBOARD DEALER ──────────────────────────────────────────
 function checkCSVStatus() {
   var warning = document.getElementById('csvWarning');
   var pdfStatus = document.getElementById('ob-pdf-status');
@@ -601,7 +598,6 @@ function openGmailOnboard() {
   window.open('https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(email)+'&su='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body),'_blank');
 }
 
-// ─── INVENTORY TOOL ──────────────────────────────────────────
 function color(h){return {red:parseInt(h.slice(1,3),16)/255,green:parseInt(h.slice(3,5),16)/255,blue:parseInt(h.slice(5,7),16)/255};}
 function fmtMi(v){var n=parseInt(v);return isNaN(n)?'':n.toLocaleString();}
 function fmtPr(v){var n=parseFloat(v);return isNaN(n)?'':'$'+Math.round(n).toLocaleString();}
@@ -692,14 +688,12 @@ function buildEmail(){
   document.getElementById('emailSubject').value=subject;
   document.getElementById('bccCount').textContent=DEALER_EMAILS.length;
   document.getElementById('bccDisplay').textContent=DEALER_EMAILS.join('; ');
-
-  // Build rich text email body
-  var html = '<p>Happy ' + TODAY.day + ',</p>';
-  html += '<p>Here\'s our refreshed inventory list. Units are located in Phoenix, AZ 85027 and Lewisville, TX 75056.</p>';
-  html += '<p>The Google Sheets link is below, or I attached a PDF with the list. Use whichever is more convenient!</p>';
-  html += '<p><a href="' + SHEETS_LINK + '">' + SHEETS_LINK + '</a></p>';
-  html += '<p>These vehicles are also available for purchase online at <a href="https://' + WEBSITE + '">' + WEBSITE + '</a></p>';
-  document.getElementById('blastBody').innerHTML = html;
+  var html='<p>Happy '+TODAY.day+',</p>';
+  html+='<p>Here\'s our refreshed inventory list. Units are located in Phoenix, AZ 85027 and Lewisville, TX 75056.</p>';
+  html+='<p>The Google Sheets link is below, or I attached a PDF with the list. Use whichever is more convenient!</p>';
+  html+='<p><a href="'+SHEETS_LINK+'">'+SHEETS_LINK+'</a></p>';
+  html+='<p>These vehicles are also available for purchase online at <a href="https://'+WEBSITE+'">'+WEBSITE+'</a></p>';
+  document.getElementById('blastBody').innerHTML=html;
 }
 
 async function syncToSheets(){
